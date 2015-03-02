@@ -34,12 +34,14 @@ device id is obtained, clients can immediately start sending measurement values 
 
 <pre><code>
 
+    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
     DatanodeWriteValue dnwrite = new DatanodeWriteValue();
     dnwrite.setName("Airflow");
     dnwrite.setPath("Engine/Primary");
     dnwrite.setUnit("l/s");
     dnwrite.setValue(85.2f);
-    dnwrite.setTimestampMiliseconds(new Date().getTime());
+    dnwrite.setTimestampMiliseconds(cal.getTimeInMillis());
 
     WriteDataResponse writeResult = client.writeData(deviceId, dnwrite);
      
