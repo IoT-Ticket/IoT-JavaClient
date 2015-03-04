@@ -69,3 +69,8 @@ device id is obtained, clients can immediately start sending measurement values 
 ## API documentation
 
 https://www.iot-ticket.com/images/Files/IoT-Ticket.com_IoT_API.pdf
+
+
+## Download JAR
+
+https://github.com/IoT-Ticket/IoT-JavaClient/releases/latest
