@@ -1,20 +1,20 @@
 package com.iotticket.api.v1.model;
 
-import com.iotticket.api.v1.validation.APIRequired;
+import com.iotticket.api.v1.validation.APIRequirement;
 import com.iotticket.api.v1.validation.Validatable;
 
 public abstract class DatanodeBase implements Validatable {
 
 
-    @APIRequired(maxLength = 100, nullable = false)
+    @APIRequirement(maxLength = 100, nullable = false)
     private String name;
 
-    @APIRequired(maxLength = 10)
+    @APIRequirement(maxLength = 10)
     private String unit;
 
     private DataType dataType;
 
-    @APIRequired(maxLength = 1000, regexPattern = "(\\/[a-zA-Z0-9]+){1,10}")
+    @APIRequirement(maxLength = 1000, regexPattern = "(\\/[a-zA-Z0-9]+){1,10}")
     private String path;
 
     public DataType getDataType() {

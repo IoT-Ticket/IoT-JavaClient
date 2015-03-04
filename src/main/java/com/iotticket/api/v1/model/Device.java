@@ -1,7 +1,7 @@
 package com.iotticket.api.v1.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.iotticket.api.v1.validation.APIRequired;
+import com.iotticket.api.v1.validation.APIRequirement;
 import com.iotticket.api.v1.validation.Validatable;
 
 import java.net.URI;
@@ -12,19 +12,19 @@ import java.util.HashSet;
 public class Device implements Validatable {
 
 
-    @APIRequired(maxLength = 100, nullable = false)
+    @APIRequirement(maxLength = 100, nullable = false)
     private String name;
 
-    @APIRequired(maxLength = 100, nullable = false)
+    @APIRequirement(maxLength = 100, nullable = false)
     private String manufacturer;
 
-    @APIRequired(maxLength = 100)
+    @APIRequirement(maxLength = 100)
     private String type;
 
-    @APIRequired(maxLength = 255)
+    @APIRequirement(maxLength = 255)
     private String description;
 
-    @APIRequired(maxLength = 50)
+    @APIRequirement(maxLength = 50)
     private Collection<DeviceAttribute> attributes = new HashSet<DeviceAttribute>();
 
     public String getName() {
@@ -101,6 +101,9 @@ public class Device implements Validatable {
     }
 
 
+    /**
+     * Represents a registered device.
+     */
     public static class DeviceDetails extends Device {
 
         @SerializedName("href")

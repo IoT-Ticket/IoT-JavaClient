@@ -4,6 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Collection;
 
+/**
+ * This class returns  a Collection of results, along with the present offset, the fullSize and the specified limit.
+ * Useful for paging.
+ */
 public class PagedResult<T> {
 
     @SerializedName("items")

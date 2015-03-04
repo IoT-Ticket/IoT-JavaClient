@@ -17,13 +17,13 @@ public class ValidationRunner {
         try {
             for (Field f : getFields(validatable.getClass())) {
                 f.setAccessible(true);
-                APIRequired apiRequired = f.getAnnotation(APIRequired.class);
-                if (apiRequired == null) {
+                APIRequirement req = f.getAnnotation(APIRequirement.class);
+                if (req == null) {
                     continue;
                 }
-                int maxlength = apiRequired.maxLength();
-                String regexPattern = apiRequired.regexPattern();
-                boolean isNullable = apiRequired.nullable();
+                int maxlength = req.maxLength();
+                String regexPattern = req.regexPattern();
+                boolean isNullable = req.nullable();
                 Class<?> type = f.getType();
                 if (type.isAssignableFrom(String.class)) {
                     String value = (String) f.get(validatable);
@@ -89,7 +89,7 @@ public class ValidationRunner {
             String msg = MessageFormat.format("{0} is needed", fieldName);
             throw new ValidAPIParamException(msg);
         }
-        if (maxChar != APIRequired.UNRESTRICTED && paramValue.length() > maxChar) {
+        if (maxChar != APIRequirement.UNRESTRICTED && paramValue.length() > maxChar) {
             String msg = MessageFormat.format("{0} attribute exceeds {1} characters expected", fieldName, maxChar);
             throw new ValidAPIParamException(msg);
         }

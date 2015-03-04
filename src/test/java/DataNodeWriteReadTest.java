@@ -1,14 +1,11 @@
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
-import com.iotticket.api.v1.model.DataType;
+import com.iotticket.api.v1.model.*;
 import com.iotticket.api.v1.model.Datanode.DatanodeRead;
 import com.iotticket.api.v1.model.Datanode.DatanodeReadValue;
 import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
-import com.iotticket.api.v1.model.DatanodeQueryCriteria;
 import com.iotticket.api.v1.model.DatanodeQueryCriteria.Order;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
-import com.iotticket.api.v1.model.ProcessValues;
-import com.iotticket.api.v1.model.WriteDataResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,6 +62,7 @@ public class DataNodeWriteReadTest extends TestBase {
         assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().size() > 0);
         assertEquals(DataType.BooleanType, processData.getDatanodeReads().iterator().next().getDataType());
         assertEquals(testBooleanValue, processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getConvertedValue());
+        assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getTimestampMilliSecond() > 0L);
 
     }
 
@@ -116,6 +114,7 @@ public class DataNodeWriteReadTest extends TestBase {
         Random r = new Random();
 
         Collection<DatanodeWriteValue> valuesToWrite = new ArrayList<DatanodeWriteValue>();
+        valuesToWrite.size();
         for (int i = 0; i < 30; i++) {
             cal.add(Calendar.MILLISECOND, 1);
 
@@ -157,7 +156,7 @@ public class DataNodeWriteReadTest extends TestBase {
         readSecondNumericValues();
 
         /**Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
-         * but different paths
+         * but with different paths
         */
         DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, numericDatanodeName);
         ProcessValues processValues = apiClient.readProcessData(crit);
@@ -170,8 +169,9 @@ public class DataNodeWriteReadTest extends TestBase {
     private void readSecondNumericValues() {
 
 
+        String fullPath = DataPathUtil.getFullPath(numericDatanodeName, secondPath);
 
-        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, secondPath + "/" + numericDatanodeName);
+        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, fullPath);
         crit.setSortOrder(Order.Descending);
 
 
@@ -198,7 +198,8 @@ public class DataNodeWriteReadTest extends TestBase {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.add(Calendar.SECOND, -5);
 
-        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, firstPath + "/" + numericDatanodeName);
+        String fullPath = DataPathUtil.getFullPath(numericDatanodeName, firstPath);
+        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, fullPath);
         crit.setFromDate(cal.getTimeInMillis());
         crit.setLimit(100);
         crit.setSortOrder(Order.Ascending);

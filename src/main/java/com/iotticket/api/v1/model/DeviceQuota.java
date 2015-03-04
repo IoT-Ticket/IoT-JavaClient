@@ -9,6 +9,10 @@ public class DeviceQuota {
     private Long storageSize;
     private Integer numberOfDataNodes;
 
+    /**
+     * @return Total number of request made to the API to the device.
+     * Any request url that includes the device Id is added to this count.
+     */
     public Long getTotalRequestToday() {
         return totalRequestToday;
     }
@@ -17,6 +21,10 @@ public class DeviceQuota {
         this.totalRequestToday = totalRequestToday;
     }
 
+
+    /**
+     * @return The max number of read request allowed to the client for this device.
+     */
     public Integer getMaxReadRequestPerDay() {
         return maxReadRequestPerDay;
     }
@@ -25,6 +33,9 @@ public class DeviceQuota {
         this.maxReadRequestPerDay = maxReadRequestPerDay;
     }
 
+    /**
+     * @return The device id for which this DeviceQuota belongs to.
+     */
     public String getDeviceId() {
         return deviceId;
     }
@@ -33,6 +44,10 @@ public class DeviceQuota {
         this.deviceId = deviceId;
     }
 
+
+    /**
+     * @return The total size in bytes that the client has written to the server for the specified device.
+     */
     public Long getStorageSize() {
         return storageSize;
     }
@@ -41,6 +56,10 @@ public class DeviceQuota {
         this.storageSize = storageSize;
     }
 
+
+    /**
+     * @return The number of data node created for the specified device.
+     */
     public Integer getNumberOfDataNodes() {
         return numberOfDataNodes;
     }

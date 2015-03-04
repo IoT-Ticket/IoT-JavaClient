@@ -17,7 +17,7 @@ public class DeviceTest extends TestBase {
 
 
     @Test
-    public void runTest() {
+    public void newDeviceTest() {
         try {
             String deviceId = testDeviceRegister();
             fetchDevices(deviceId);

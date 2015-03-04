@@ -1,7 +1,7 @@
 package com.iotticket.api.v1.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.iotticket.api.v1.validation.APIRequired;
+import com.iotticket.api.v1.validation.APIRequirement;
 
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
@@ -27,12 +27,12 @@ public class Datanode extends DatanodeBase {
 
 
         @SerializedName("v")
-        @APIRequired(nullable = false)
+        @APIRequirement(nullable = false)
         private String value;
 
 
         @SerializedName("ts")
-        private long timestampMiliseconds;
+        private Long timestampMiliseconds;
 
 
         public String getValue() {
@@ -99,11 +99,11 @@ public class Datanode extends DatanodeBase {
         }
 
 
-        public long getTimestampMiliseconds() {
+        public Long getTimestampMiliseconds() {
             return timestampMiliseconds;
         }
 
-        public void setTimestampMiliseconds(long timestampMiliseconds) {
+        public void setTimestampMiliseconds(Long timestampMiliseconds) {
             this.timestampMiliseconds = timestampMiliseconds;
         }
     }

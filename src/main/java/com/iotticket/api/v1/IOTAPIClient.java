@@ -54,6 +54,14 @@ public class IOTAPIClient {
 
     }
 
+
+    /**
+     * @param device provides the description of the device to be registered.
+     * @return a <tt>DeviceDetails</tt> object that includes, among other things specified in the device object, the deviceId
+     * {@link DeviceDetails#getDeviceId}.and the URI for the newly registered device.
+     * @throws ValidAPIParamException if the device does not meet the specified requirements
+     */
+
     public DeviceDetails registerDevice(Device device) throws ValidAPIParamException {
 
         validator.runValidation(device);
@@ -99,6 +107,15 @@ public class IOTAPIClient {
         return writeData(deviceId, Arrays.asList(data));
     }
 
+
+    /**
+     *
+     * @param deviceId The target Device identifier
+     * @param writeValues Collection of DatanodeWriteValue to write to the server
+     * @return <tt>WriteDataResponse</tt>
+     * @throws ValidAPIParamException If the any of the DatanodeWriteValue doesn't meet specified requirement.
+     */
+
     public WriteDataResponse writeData(String deviceId, Collection<DatanodeWriteValue> writeValues) throws ValidAPIParamException {
 
         for (DatanodeWriteValue writeValue : writeValues) {
@@ -115,6 +132,13 @@ public class IOTAPIClient {
         return getResponse(res, WriteDataResponse.class);
     }
 
+
+    /**
+     * @param offset The amount to skip from the beginning.
+     * @param limit  The maximum amount of result to be returned
+     * @return a Collection of client's devices with paging support. Obtain items list using {@link PagedResult#getResults}
+     */
+
     public PagedResult<DeviceDetails> getDeviceList(int offset, int limit) {
 
 
@@ -125,6 +149,13 @@ public class IOTAPIClient {
 
     }
 
+    /**
+     *
+     * @param deviceId The device to query.
+     * @param offset The amount to skip from the beginning.
+     * @param limit  The maximum amount of result to be returned
+     * @return Get a list of provided device datanodes with Paging support.Obtain items list using {@link PagedResult#getResults}
+     */
     public PagedResult<Datanode> getDeviceDataNodeList(String deviceId, int offset, int limit) {
 
         WebTarget target = baseTarget.path(DatanodesResourceFormat).resolveTemplate("deviceId", deviceId).queryParam("limit", limit).queryParam("offset", offset);
@@ -133,12 +164,23 @@ public class IOTAPIClient {
 
     }
 
+    /**
+     * @param deviceId The deviceId for the device to be fetched from the server.
+     * @return <tt>DeviceDetails</tt> that describes the device's name, attributes, URI etc.
+     */
+
     public Device.DeviceDetails getDevice(String deviceId) {
         WebTarget target = baseTarget.path(SpecificDeviceResourceFormat).resolveTemplate("deviceId", deviceId);
         Response res = target.request().accept(JSON).get();
         return getResponse(res, DeviceDetails.class);
     }
 
+
+    /**
+     * @param criteria The <tt>DatanodeQueryCriteria</tt> object used to query for the process values
+     * @return Request <tt>ProcessValues</tt>
+     * @See DatanodeQueryCriteria
+     */
     public ProcessValues readProcessData(DatanodeQueryCriteria criteria) {
 
 
@@ -178,10 +220,21 @@ public class IOTAPIClient {
     }
 
 
+    /**
+     *
+     * @return Fetechs the user's <tt>Quota</tt> information from the server
+     */
     public Quota getQuota() {
         Response res = baseTarget.path(QuotaAllResource).request().accept(JSON).get();
         return getResponse(res, Quota.class);
     }
+
+
+    /**
+     *
+     * @param deviceId
+     * @return Get the <tt>DeviceQuota</tt> from the server for the device with the specified deviceId
+     */
 
     public DeviceQuota getDeviceQuota(String deviceId) {
         Response res = baseTarget.path(QuotaDeviceResourceFormat).resolveTemplate("deviceId", deviceId).request().accept(JSON).get();

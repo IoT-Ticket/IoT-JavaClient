@@ -1,15 +1,15 @@
 package com.iotticket.api.v1.model;
 
 
-import com.iotticket.api.v1.validation.APIRequired;
+import com.iotticket.api.v1.validation.APIRequirement;
 import com.iotticket.api.v1.validation.Validatable;
 
 public class DeviceAttribute implements Validatable {
 
-    @APIRequired(maxLength = 255, nullable = false)
+    @APIRequirement(maxLength = 255, nullable = false)
     private String key;
 
-    @APIRequired(maxLength = 255, nullable = false)
+    @APIRequirement(maxLength = 255, nullable = false)
     private String value;
 
     public DeviceAttribute(String key, String value) {

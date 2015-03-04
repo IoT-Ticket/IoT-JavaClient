@@ -8,6 +8,10 @@ public class Quota {
     private Long usedStorageSize;
     private Long maxStorageSize;
 
+    /**
+     * @return Total number of devices the client owns.
+     * NOTE: This is not the same as the total number of devices the client has access to.
+     */
     public Integer getTotalDevices() {
         return totalDevices;
     }
@@ -16,6 +20,11 @@ public class Quota {
         this.totalDevices = totalDevices;
     }
 
+
+    /**
+     *
+     * @return The maximum number of devices the client can create.
+     */
     public Integer getMaxNumberOfDevices() {
         return maxNumberOfDevices;
     }
@@ -23,6 +32,11 @@ public class Quota {
     public void setMaxNumberOfDevices(Integer maxNumberOfDevices) {
         this.maxNumberOfDevices = maxNumberOfDevices;
     }
+
+    /**
+     *
+     * @return The maximum datanodes per device allowed for a client.
+     */
 
     public Integer getMaxDataNodePerDevice() {
         return maxDataNodePerDevice;
@@ -32,6 +46,11 @@ public class Quota {
         this.maxDataNodePerDevice = maxDataNodePerDevice;
     }
 
+
+    /**
+     *
+     * @return The total size in bytes that the client has written to the server.
+     */
     public Long getUsedStorageSize() {
         return usedStorageSize;
     }
@@ -40,6 +59,10 @@ public class Quota {
         this.usedStorageSize = usedStorageSize;
     }
 
+    /**
+     *
+     * @return The maximum size in bytes that the client has a right to write to the server.
+     */
     public Long getMaxStorageSize() {
         return maxStorageSize;
     }
