@@ -2,6 +2,7 @@ package com.iotticket.api.v1.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Collection;
 public class PagedResult<T> {
 
     @SerializedName("items")
-    private Collection<T> results;
+    private Collection<T> results = new ArrayList<T>();
 
     @SerializedName("offset")
     private int skip;
