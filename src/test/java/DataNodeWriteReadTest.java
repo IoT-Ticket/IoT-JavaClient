@@ -157,7 +157,7 @@ public class DataNodeWriteReadTest extends TestBase {
 
         /**Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
          * but with different paths
-        */
+         */
         DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, numericDatanodeName);
         ProcessValues processValues = apiClient.readProcessData(crit);
         Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();

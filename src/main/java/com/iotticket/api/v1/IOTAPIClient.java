@@ -67,7 +67,7 @@ public class IOTAPIClient {
         validator.runValidation(device);
 
         String json = gson.toJson(device);
-        Entity<String> entity = Entity.entity(json, JSON);
+        Entity<String> entity = Entity.entity(json, MediaType.APPLICATION_JSON + "; charset=UTF-8");
         Response res = baseTarget.path(DevicesResource).request(JSON).post(entity);
         return getResponse(res, DeviceDetails.class);
     }
@@ -125,7 +125,7 @@ public class IOTAPIClient {
         String json = gson.toJson(writeValues);
 
         LOG.finest(json);
-        Entity<String> entity = Entity.entity(json, JSON);
+        Entity<String> entity = Entity.entity(json, MediaType.APPLICATION_JSON + "; charset=UTF-8");
 
         WebTarget target = baseTarget.path(WriteDataResourceFormat).resolveTemplate("deviceId", deviceId);
         Response res = target.request(JSON).post(entity);

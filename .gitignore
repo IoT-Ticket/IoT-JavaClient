@@ -2,7 +2,7 @@
 target/
 .idea/
 *.iml
-
+src/test/java/TestBase
 
 # Package Files #
 *.jar

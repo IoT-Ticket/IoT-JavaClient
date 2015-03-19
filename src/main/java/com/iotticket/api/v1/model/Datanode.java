@@ -2,8 +2,8 @@ package com.iotticket.api.v1.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.iotticket.api.v1.validation.APIRequirement;
+import org.apache.commons.codec.binary.Base64;
 
-import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -93,7 +93,7 @@ public class Datanode extends DatanodeBase {
         }
 
         public void setByteValue(byte[] bytes) {
-            String encode = DatatypeConverter.printBase64Binary(bytes);
+            String encode = Base64.encodeBase64String(bytes);
             setDataType(DataType.BinaryType);
             setInternal(encode);
         }
