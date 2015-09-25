@@ -32,7 +32,7 @@ public class Datanode extends DatanodeBase {
 
 
         @SerializedName("ts")
-        private Long timestampMiliseconds;
+        private Long timestampMilliseconds;
 
 
         public String getValue() {
@@ -99,12 +99,12 @@ public class Datanode extends DatanodeBase {
         }
 
 
-        public Long getTimestampMiliseconds() {
-            return timestampMiliseconds;
+        public Long getTimestampMilliseconds() {
+            return timestampMilliseconds;
         }
 
-        public void setTimestampMiliseconds(Long timestampMiliseconds) {
-            this.timestampMiliseconds = timestampMiliseconds;
+        public void setTimestampMilliseconds(Long timestampMilliseconds) {
+            this.timestampMilliseconds = timestampMilliseconds;
         }
     }
 
@@ -134,7 +134,7 @@ public class Datanode extends DatanodeBase {
         private String value;
 
         @SerializedName("ts")
-        private long timestampMilliSecond = UNSET;
+        private long timestampMilliSeconds = UNSET;
         private transient DataType dataType;
 
         public String getValue() {
@@ -145,12 +145,12 @@ public class Datanode extends DatanodeBase {
             this.value = value;
         }
 
-        public long getTimestampMilliSecond() {
-            return timestampMilliSecond;
+        public long getTimestampMilliSeconds() {
+            return timestampMilliSeconds;
         }
 
-        public void setTimestampMilliSecond(long timestampMilliSecond) {
-            this.timestampMilliSecond = timestampMilliSecond;
+        public void setTimestampMilliSeconds(long timestampMilliSeconds) {
+            this.timestampMilliSeconds = timestampMilliSeconds;
         }
 
         public Object getConvertedValue() {

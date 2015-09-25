@@ -41,7 +41,7 @@ device id is obtained, clients can immediately start sending measurement values 
     dnwrite.setPath("Engine/Primary");
     dnwrite.setUnit("l/s");
     dnwrite.setValue(85.2f);
-    dnwrite.setTimestampMiliseconds(cal.getTimeInMillis());
+    dnwrite.setTimestampMilliseconds(cal.getTimeInMillis());
 
     WriteDataResponse writeResult = client.writeData(deviceId, dnwrite);
      
@@ -60,7 +60,7 @@ device id is obtained, clients can immediately start sending measurement values 
     for (DatanodeRead datanodeRead : datanodeReads) {
 
         for (DatanodeReadValue value : datanodeRead.getDatanodeReadValues()) {
-            System.out.println("Value=" + value.getValue() + " @" +value.getTimestampMilliSecond());
+            System.out.println("Value=" + value.getValue() + " @" +value.getTimestampMilliSeconds());
 
         }
     }
