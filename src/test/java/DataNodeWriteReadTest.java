@@ -62,7 +62,7 @@ public class DataNodeWriteReadTest extends TestBase {
         assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().size() > 0);
         assertEquals(DataType.BooleanType, processData.getDatanodeReads().iterator().next().getDataType());
         assertEquals(testBooleanValue, processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getConvertedValue());
-        assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getTimestampMilliSecond() > 0L);
+        assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getTimestampMilliSeconds() > 0L);
 
     }
 
@@ -123,7 +123,7 @@ public class DataNodeWriteReadTest extends TestBase {
             dnwrite.setPath(firstPath);
             dnwrite.setUnit("l/s");
             dnwrite.setValue(r.nextInt(10));
-            dnwrite.setTimestampMiliseconds(cal.getTimeInMillis());
+            dnwrite.setTimestampMilliseconds(cal.getTimeInMillis());
 
             valuesToWrite.add(dnwrite);
 
@@ -133,7 +133,7 @@ public class DataNodeWriteReadTest extends TestBase {
             dnwrite.setPath(secondPath);
             dnwrite.setUnit("l/s");
             dnwrite.setValue(10 * r.nextDouble());
-            dnwrite.setTimestampMiliseconds(cal.getTimeInMillis());
+            dnwrite.setTimestampMilliseconds(cal.getTimeInMillis());
 
             valuesToWrite.add(dnwrite);
 
@@ -184,7 +184,7 @@ public class DataNodeWriteReadTest extends TestBase {
             assertTrue(values.size() == 1);
 
             for (DatanodeReadValue value : values) {
-                long ts = value.getTimestampMilliSecond();
+                long ts = value.getTimestampMilliSeconds();
                 double val = (Double) value.getConvertedValue();
 
                 assertTrue(ts > 0);
@@ -213,7 +213,7 @@ public class DataNodeWriteReadTest extends TestBase {
             assertTrue(values.size() >= 30);
 
             for (DatanodeReadValue value : values) {
-                long ts = value.getTimestampMilliSecond();
+                long ts = value.getTimestampMilliSeconds();
                 long val = (Long) value.getConvertedValue();
 
                 assertTrue(val < 10);

@@ -222,7 +222,7 @@ public class IOTAPIClient {
 
     /**
      *
-     * @return Fetechs the user's <tt>Quota</tt> information from the server
+     * @return Fetches the user's <tt>Quota</tt> information from the server
      */
     public Quota getQuota() {
         Response res = baseTarget.path(QuotaAllResource).request().accept(JSON).get();
