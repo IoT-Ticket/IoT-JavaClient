@@ -1,3 +1,4 @@
+
 import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
 import com.iotticket.api.v1.model.Device;
 import com.iotticket.api.v1.model.DeviceAttribute;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class ValidationTest {
+public class ValidationIT {
 
 
     private static ValidationRunner validator = new ValidationRunner();

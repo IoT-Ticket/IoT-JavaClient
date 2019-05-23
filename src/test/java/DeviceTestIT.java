@@ -1,3 +1,4 @@
+
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.Device;
@@ -10,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class DeviceTest extends TestBase {
+public class DeviceTestIT extends IntegrationTestBase {
 
 
     public static final String DEVICENAME = "DreamCar";

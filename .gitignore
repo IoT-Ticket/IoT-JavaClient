@@ -10,3 +10,8 @@ src/test/java/TestBase
 *.ear
 
 hs_err_pid*
+
+# Eclipse generated files #
+.classpath
+.project
+.settings

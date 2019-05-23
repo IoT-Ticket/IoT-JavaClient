@@ -1,16 +1,19 @@
+
+
 import junit.framework.TestCase;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
 
-@RunWith(Suite.class)
+/*@RunWith(Suite.class)
 @Suite.SuiteClasses({
         ValidationTest.class,
         DeviceTest.class,
         QuotaTest.class,
         DataNodeWriteReadTest.class
-})
-public class IOTAPITests extends TestCase {
+})*/
+
+// TODO: Remove this class as is not needed with surefire and failsafe plugins
+public class IOTAPITests /*extends TestCase*/ {
 
 
 }

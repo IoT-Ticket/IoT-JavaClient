@@ -1,3 +1,4 @@
+
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.model.DeviceQuota;
 import com.iotticket.api.v1.model.Quota;
@@ -6,7 +7,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class QuotaTest extends TestBase {
+public class QuotaIT extends IntegrationTestBase {
 
     @Test
     public void getClientQuota() throws IoTServerCommunicationException {

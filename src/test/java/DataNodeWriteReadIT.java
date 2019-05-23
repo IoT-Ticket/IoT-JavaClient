@@ -1,3 +1,4 @@
+
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.*;
@@ -13,7 +14,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class DataNodeWriteReadTest extends TestBase {
+public class DataNodeWriteReadIT extends IntegrationTestBase {
 
     private final static byte[] testByteValue = new byte[]{1, 2, 3, 4, 5, 6, 7, 9, 10};
     public static String firstPath = "Engine/Auxillary";
