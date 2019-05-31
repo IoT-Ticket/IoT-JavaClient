@@ -1,8 +1,9 @@
+package com.iotticket.api.v1.integrationTests;
+
 
 import com.iotticket.api.v1.IOTAPIClient;
 
 public abstract class IntegrationTestBase {
-
 
 
     final static String SERVER_URL = "https://my.iot-ticket.com/api/v1";

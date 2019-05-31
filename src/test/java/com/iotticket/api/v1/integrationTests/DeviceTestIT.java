@@ -1,3 +1,4 @@
+package com.iotticket.api.v1.integrationTests;
 
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;

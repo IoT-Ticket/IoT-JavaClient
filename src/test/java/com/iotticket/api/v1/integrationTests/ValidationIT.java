@@ -1,3 +1,4 @@
+package com.iotticket.api.v1.integrationTests;
 
 import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
 import com.iotticket.api.v1.model.Device;

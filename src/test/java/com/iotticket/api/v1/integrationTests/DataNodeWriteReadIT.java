@@ -1,3 +1,4 @@
+package com.iotticket.api.v1.integrationTests;
 
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
@@ -205,6 +206,14 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         crit.setLimit(100);
         crit.setSortOrder(Order.Ascending);
 
+        // TODO: Without the following code the test fails, as the stored nodes are not yet available.
+        try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         ProcessValues processValues = apiClient.readProcessData(crit);
         Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
         for (DatanodeRead datanodeRead : datanodeReads) {
