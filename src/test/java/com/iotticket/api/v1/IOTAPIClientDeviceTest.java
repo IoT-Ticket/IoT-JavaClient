@@ -1,35 +1,41 @@
 package com.iotticket.api.v1;
 
-import org.junit.Before;
-import org.junit.Ignore;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.Device;
-import com.iotticket.api.v1.model.DeviceAttribute;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 
 public class IOTAPIClientDeviceTest{
 	
-    private static final int TEST_PORT = 9999;
-	private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(TEST_PORT) + "/";
+	
+    private static final int WIREMOCK_PORT = 9999;
+    private static final String PATH_TO_REQUEST_AND_RESPONSE_BODIES = "com/iotticket/api/v1/";
+    
+    private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
 	private static final String TEST_USERNAME = "user1";
 	private static final String TEST_PASSWORD = "pw1";
 	
@@ -43,10 +49,10 @@ public class IOTAPIClientDeviceTest{
 	private final static String TEST_DEVICES_RESOURCE = "/devices/";
 	    	
 	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(TEST_PORT);
+	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
 	
 	@Test
-	public void testRegisterDevice() throws ValidAPIParamException{
+	public void testRegisterDevice() throws ValidAPIParamException, IOException, URISyntaxException{
 		
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
@@ -54,31 +60,17 @@ public class IOTAPIClientDeviceTest{
 		device.setName(TEST_DEVICE_NAME);
 		device.setManufacturer(TEST_DEVICE_MANUFACTURER); 
 		
-		
 		stubFor(post(
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						"{" + 
-						"	\"name\": \"Test device\"," + 
-						"	\"manufacturer\": \"Test Oy\"," +
-						"	\"attributes\": []" +
-						"}"))
+						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(
-								"{" + 
-								"	\"attributes\": []," + 
-								"	\"createdAt\": \"2014-12-03T10:31:05UTC\"," + 
-								"	\"deviceId\": \"153ffceb982745e8b1e8abacf9c217f3\"," + 
-								"	\"href\": \"https://www.test-url.com:9999/devices/153ffceb982745e8b1e8abacf9c217f3\"," + 
-								"	\"name\": \"Test device\"," + 
-								"	\"manufacturer\": \"Test Oy\"," + 
-								"	\"resourceId\": \"X123\"" + 
-								"}"))
+						withBody(readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceResponseBody.json")))
 				);
 		
 		DeviceDetails result = iotApiClient.registerDevice(device);
@@ -87,11 +79,7 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						"{" + 
-						"	\"name\": \"Test device\"," + 
-						"	\"manufacturer\": \"Test Oy\"," +
-						"	\"attributes\": []" +
-						"}"))
+						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(result.getName(), TEST_DEVICE_NAME);
@@ -101,7 +89,7 @@ public class IOTAPIClientDeviceTest{
 	}
 	
 	@Test(expected = IoTServerCommunicationException.class)
-	public void testRegisterDevice_invalidCredentials() throws ValidAPIParamException{
+	public void testRegisterDevice_invalidCredentials() throws ValidAPIParamException, IOException, URISyntaxException{
 		
 		String wrongPassword = "pw2";
 		
@@ -115,39 +103,24 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						"{" + 
-						"	\"name\": \"Test device\"," + 
-						"	\"manufacturer\": \"Test Oy\"," +
-						"	\"attributes\": []" +
-						"}"))
+						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, wrongPassword)
 				.willReturn(
 						aResponse()
 						.withStatus(401)
-						.withBody(
-								"{" + 
-								"  \"description\": \"Provide a valid authorization credential\"," + 
-								"  \"code\": 8001," + 
-								"  \"moreInfo\": \"https://my.iot-ticket.com/api/v1/errorcodes\"," + 
-								"  \"apiver\": 1" + 
-								"}"))
+						.withBody(readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDevice_invalidCredentialsResponseBody.json")))
 				);
 		
-		DeviceDetails result = iotApiClient.registerDevice(device);
+		iotApiClient.registerDevice(device);
+	}
+	
+	// TODO: This method is needed in every unit test class so make this static and move to own class
+	private String readFromFile(String filename) throws IOException, URISyntaxException {		
+		Path path = Paths.get(getClass().getClassLoader()
+			      .getResource(filename).toURI());
 		
-		verify(postRequestedFor(
-				urlEqualTo(TEST_DEVICES_RESOURCE))
-				.withHeader("Accept", equalTo("application/json"))
-				.withRequestBody(equalToJson(
-						"{" + 
-						"	\"name\": \"Test device\"," + 
-						"	\"manufacturer\": \"Test Oy\"," +
-						"	\"attributes\": []" +
-						"}"))
-				.withBasicAuth(new BasicCredentials(TEST_USERNAME, wrongPassword)));
-		
-		assertEquals(result.getDescription(), TEST_INVALID_CREDENTIALS_DESCRIPTION);
-		
+		byte[] fileAsBytes = Files.readAllBytes(path);
+		return new String(fileAsBytes, StandardCharsets.UTF_8.name());
 	}
 	
 }
