@@ -1,0 +1,38 @@
+{
+  "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?todate=1546380000000&limit=3&datanodes=latitude%2Clongitude%2C%2FEngine%2FisRunning&fromdate=1546293600000",
+  "datanodeReads": [
+    {
+      "dataType": "double",
+      "unit": "",
+      "name": "longitude",
+      "values": [
+        {
+          "v": "21.61577",
+          "ts": 1546293601000
+        }
+      ]
+    },
+    {
+      "dataType": "boolean",
+      "unit": "",
+      "name": "Engine/isRunning",
+      "values": [
+        {
+          "v": "true",
+          "ts": 1546293601000
+        }
+      ]
+    },
+    {
+      "dataType": "double",
+      "unit": "",
+      "name": "latitude",
+      "values": [
+        {
+          "v": "63.096",
+          "ts": 1546293601000
+        }
+      ]
+    }
+  ]
+}

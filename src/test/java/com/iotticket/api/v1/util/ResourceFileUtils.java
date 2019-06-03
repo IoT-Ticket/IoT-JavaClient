@@ -12,7 +12,7 @@ public class ResourceFileUtils {
 	
 	/**
 	 * Reads resource file to string. Resource file must be in the same
-	 * package with Clazz class.
+	 * package with Class clazz.
 	 * 
 	 * @param filename Name of the resource file. 
 	 * @param clazz Class that needs the resource. Resource file must be in the
@@ -22,7 +22,6 @@ public class ResourceFileUtils {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	
 	
 	public static String resourceFileToString(String filename, Class<?> clazz) throws IOException, URISyntaxException {
 		URL resourceUrl = clazz.getResource(filename);

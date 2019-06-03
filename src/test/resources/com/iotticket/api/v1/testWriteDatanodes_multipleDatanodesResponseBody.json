@@ -1,0 +1,25 @@
+{
+  "totalWritten": 5,
+  "writeResults": [
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/doubleData",
+      "writtenCount": 1
+    },
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/BinaryType",
+      "writtenCount": 1
+    },
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/BooleanType",
+      "writtenCount": 1
+    },
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/longData",
+      "writtenCount": 1
+    },
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/stringData",
+      "writtenCount": 1
+    }
+  ]
+}

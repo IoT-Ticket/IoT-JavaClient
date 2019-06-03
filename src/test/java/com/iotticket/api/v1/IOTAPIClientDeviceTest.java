@@ -12,15 +12,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -37,10 +31,12 @@ import com.iotticket.api.v1.util.ResourceFileUtils;
 public class IOTAPIClientDeviceTest{
 	
 	
-    private static final int WIREMOCK_PORT = 9999;
-    
+    private static final int WIREMOCK_PORT = 9999; 
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
-	private static final String TEST_USERNAME = "user1";
+	
+    private static final String TEST_DEVICES_RESOURCE = "/devices/";
+    
+    private static final String TEST_USERNAME = "user1";
 	private static final String TEST_PASSWORD = "pw1";
 	
 	private static final String TEST_DEVICE_NAME = "Test device";
@@ -48,9 +44,7 @@ public class IOTAPIClientDeviceTest{
 	private static final String TEST_DEVICE_TYPE = "PC";
 	private static final String TEST_DEVICE_DESCRIPTION = "The main server";
 	
-	
 	private static final String TEST_DEVICE_ID = "153ffceb982745e8b1e8abacf9c217f3";
-	private static final String TEST_DEVICES_RESOURCE = "/devices/";
 	    	
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);

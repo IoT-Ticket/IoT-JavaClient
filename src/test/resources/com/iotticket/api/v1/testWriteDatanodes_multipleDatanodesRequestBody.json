@@ -1,0 +1,27 @@
+[
+	{
+		"v": "1.1",
+		"name": "doubleData",
+		"dataType" : "double"
+	},
+	{
+		"v": "1",
+		"name": "longData",
+		"dataType" : "long"
+	},
+	{
+		"v": "true",
+		"name": "stringData",
+		"dataType" : "string"
+	},
+	{
+		"v": "AAEA",
+		"name": "binaryData",
+		"dataType" : "binary"
+	},
+	{
+		"v": "true",
+		"name": "booleanData",
+		"dataType" : "boolean"
+	}
+]

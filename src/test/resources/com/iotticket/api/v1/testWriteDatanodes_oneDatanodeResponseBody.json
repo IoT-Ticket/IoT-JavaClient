@@ -1,0 +1,9 @@
+{
+  "totalWritten": 1,
+  "writeResults": [
+    {
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=/Temperature",
+      "writtenCount": 1
+    }
+  ]
+}
