@@ -17,7 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -27,13 +30,14 @@ import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.Device;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
+import com.iotticket.api.v1.model.DeviceAttribute;
+import com.iotticket.api.v1.util.ResourceFileUtils;
 
 
 public class IOTAPIClientDeviceTest{
 	
 	
     private static final int WIREMOCK_PORT = 9999;
-    private static final String PATH_TO_REQUEST_AND_RESPONSE_BODIES = "com/iotticket/api/v1/";
     
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
 	private static final String TEST_USERNAME = "user1";
@@ -41,12 +45,12 @@ public class IOTAPIClientDeviceTest{
 	
 	private static final String TEST_DEVICE_NAME = "Test device";
 	private static final String TEST_DEVICE_MANUFACTURER = "Test Oy";
+	private static final String TEST_DEVICE_TYPE = "PC";
+	private static final String TEST_DEVICE_DESCRIPTION = "The main server";
 	
-	private static final String TEST_INVALID_CREDENTIALS_DESCRIPTION = "Provide a valid authorization credential";
-
 	
 	private static final String TEST_DEVICE_ID = "153ffceb982745e8b1e8abacf9c217f3";
-	private final static String TEST_DEVICES_RESOURCE = "/devices/";
+	private static final String TEST_DEVICES_RESOURCE = "/devices/";
 	    	
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
@@ -56,21 +60,31 @@ public class IOTAPIClientDeviceTest{
 		
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
+		DeviceAttribute attribute1 = new DeviceAttribute("Application Version", "0.2.3");
+		DeviceAttribute attribute2 = new DeviceAttribute("Chip", "TestCore");
+		
+		Collection<DeviceAttribute> deviceAttributes = new ArrayList<DeviceAttribute>();
+		deviceAttributes.add(attribute1);
+		deviceAttributes.add(attribute2);
+		
 		Device device = new Device();
 		device.setName(TEST_DEVICE_NAME);
-		device.setManufacturer(TEST_DEVICE_MANUFACTURER); 
+		device.setManufacturer(TEST_DEVICE_MANUFACTURER);
+		device.setType(TEST_DEVICE_TYPE);
+		device.setDescription(TEST_DEVICE_DESCRIPTION);
+		device.setAttributes(deviceAttributes);
 		
 		stubFor(post(
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
+						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceResponseBody.json")))
+						withBody(ResourceFileUtils.resourceFileToString("testRegisterDeviceResponseBody.json", getClass())))
 				);
 		
 		DeviceDetails result = iotApiClient.registerDevice(device);
@@ -79,13 +93,12 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
+						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(result.getName(), TEST_DEVICE_NAME);
 		assertEquals(result.getManufacturer(), TEST_DEVICE_MANUFACTURER);
 		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
-		
 	}
 	
 	@Test(expected = IoTServerCommunicationException.class)
@@ -95,32 +108,33 @@ public class IOTAPIClientDeviceTest{
 		
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, wrongPassword);
 		
+		DeviceAttribute attribute1 = new DeviceAttribute("Application Version", "0.2.3");
+		DeviceAttribute attribute2 = new DeviceAttribute("Chip", "TestCore");
+		
+		Collection<DeviceAttribute> deviceAttributes = new ArrayList<DeviceAttribute>();
+		deviceAttributes.add(attribute1);
+		deviceAttributes.add(attribute2);
+		
 		Device device = new Device();
 		device.setName(TEST_DEVICE_NAME);
-		device.setManufacturer(TEST_DEVICE_MANUFACTURER); 
+		device.setManufacturer(TEST_DEVICE_MANUFACTURER);
+		device.setType(TEST_DEVICE_TYPE);
+		device.setDescription(TEST_DEVICE_DESCRIPTION);
+		device.setAttributes(deviceAttributes);
 		
 		stubFor(post(
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDeviceRequestBody.json")))
+						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
 				.withBasicAuth(TEST_USERNAME, wrongPassword)
 				.willReturn(
 						aResponse()
 						.withStatus(401)
-						.withBody(readFromFile(PATH_TO_REQUEST_AND_RESPONSE_BODIES + "testRegisterDevice_invalidCredentialsResponseBody.json")))
+						.withBody(ResourceFileUtils.resourceFileToString("testRegisterDevice_invalidCredentialsResponseBody.json", getClass())))
 				);
 		
 		iotApiClient.registerDevice(device);
-	}
-	
-	// TODO: This method is needed in every unit test class so make this static and move to own class
-	private String readFromFile(String filename) throws IOException, URISyntaxException {		
-		Path path = Paths.get(getClass().getClassLoader()
-			      .getResource(filename).toURI());
-		
-		byte[] fileAsBytes = Files.readAllBytes(path);
-		return new String(fileAsBytes, StandardCharsets.UTF_8.name());
 	}
 	
 }

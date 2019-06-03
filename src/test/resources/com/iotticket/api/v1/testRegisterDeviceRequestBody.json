@@ -1,5 +1,12 @@
 { 
 	"name": "Test device",
 	"manufacturer": "Test Oy",
-	"attributes": []
+	"type": "PC",
+	"description": "The main server",
+	"attributes":[{
+		"key":"Application Version",
+		"value": "0.2.3"},
+		{"key":"Chip",
+		"value":"TestCore"}
+	]
 }
