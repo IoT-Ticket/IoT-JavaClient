@@ -12,7 +12,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +27,9 @@ import org.junit.Test;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.iotticket.api.v1.model.DataType;
+import com.iotticket.api.v1.model.Datanode;
 import com.iotticket.api.v1.model.DatanodeQueryCriteria;
+import com.iotticket.api.v1.model.PagedResult;
 import com.iotticket.api.v1.model.ProcessValues;
 import com.iotticket.api.v1.model.Datanode.DatanodeRead;
 import com.iotticket.api.v1.model.Datanode.DatanodeReadValue;
@@ -39,7 +43,8 @@ public class IOTAPIClientDatanodeWriteReadTest {
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
 	
     private static final String TEST_DATA_NODE_WRITE_RESOURCE = "/process/write/153ffceb982745e8b1e8abacf9c217f3/";
-    private static final String TEST_DATA_NODE_READ_RESOURCE_BASE = "/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=Engine/isRunning,latitude,longitude&limit=3&fromdate=1546293600000&todate=1546380000000";
+    private static final String TEST_DATA_NODE_READ_RESOURCE = "/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=Engine/isRunning,latitude,longitude&limit=3&fromdate=1546293600000&todate=1546380000000";
+    private static final String TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE = "/devices/153ffceb982745e8b1e8abacf9c217f3/datanodes/?limit=2&offset=0";
     
     private static final String TEST_USERNAME = "user1";
 	private static final String TEST_PASSWORD = "pw1";
@@ -159,7 +164,6 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		String datapoint2 = "longitude";
 		String datapoint3 = "Engine/isRunning";
 
-
 		DatanodeQueryCriteria datanodeQueryCriteria = new DatanodeQueryCriteria(TEST_DEVICE_ID, datapoint1, datapoint2, datapoint3);
 		
 		Date fromDate = new Date(1546293600000L);
@@ -171,8 +175,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		datanodeQueryCriteria.setLimit(3);
 		
 		stubFor(get(
-				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE_BASE))
-				.withHeader("Accept", equalTo("application/json"))
+				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
@@ -184,8 +187,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		ProcessValues result = iotApiClient.readProcessData(datanodeQueryCriteria);
 		
 		verify(getRequestedFor(
-				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE_BASE))
-				.withHeader("Accept", equalTo("application/json"))
+				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(result.getUri().toString(), "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?todate=1546380000000&limit=3&datanodes=latitude%2Clongitude%2C%2FEngine%2FisRunning&fromdate=1546293600000");
@@ -219,6 +221,45 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		ArrayList<DatanodeReadValue> datanodeReadValues3 = new ArrayList<DatanodeReadValue>(datanodeRead3.getDatanodeReadValues());
 		assertEquals("63.096", datanodeReadValues3.get(0).getValue());
 		assertEquals(1546293601000L, datanodeReadValues3.get(0).getTimestampMilliSeconds());
+		
+	}
+	
+	@Test
+	public void testGetDeviceDataNodes() throws Exception {
+		
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		stubFor(get(
+				urlEqualTo(TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json").
+						withBody(ResourceFileUtils.resourceFileToString("testGetDeviceDataNodesResponseBody.json", getClass())))
+				);
+		
+		PagedResult<Datanode> result = iotApiClient.getDeviceDataNodeList(TEST_DEVICE_ID, 0, 2);
+		
+		verify(getRequestedFor(
+				urlEqualTo(TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(2, result.getRequestedCount());
+		assertEquals(9, result.getTotalCount());
+		assertEquals(0, result.getSkip());
+		
+		ArrayList<Datanode> datanodes = new ArrayList<Datanode>(result.getResults());
+		
+		Datanode datanode1 = datanodes.get(0);
+		assertEquals(DataType.BooleanType, datanode1.getDataType());
+		assertEquals("Engine/isRunning", datanode1.getName());
+		assertEquals("https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=%2Fengine%2Fisrunning", datanode1.getUri().toString());
+		
+		Datanode datanode2 = datanodes.get(1);
+		assertEquals(DataType.DoubleType, datanode2.getDataType());
+		assertEquals("longitude", datanode2.getName());
+		assertEquals("https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=%2Flongitude", datanode2.getUri().toString());
 		
 	}
 	

@@ -5,6 +5,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
@@ -15,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -25,6 +28,7 @@ import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.Device;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
 import com.iotticket.api.v1.model.DeviceAttribute;
+import com.iotticket.api.v1.model.PagedResult;
 import com.iotticket.api.v1.util.ResourceFileUtils;
 
 
@@ -129,6 +133,58 @@ public class IOTAPIClientDeviceTest{
 				);
 		
 		iotApiClient.registerDevice(device);
+	}
+	
+	@Test 
+	@Ignore
+	public void testGetDevices() throws Exception {
+		
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		stubFor(get(
+				urlEqualTo(TEST_DEVICES_RESOURCE))
+				.withRequestBody(equalToJson(
+						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withBody(ResourceFileUtils.resourceFileToString("testRegisterDevice_invalidCredentialsResponseBody.json", getClass())))
+				);
+		
+		PagedResult<DeviceDetails> result = iotApiClient.getDeviceList(1, 2);
+		
+		verify(getRequestedFor(
+				urlEqualTo(TEST_DEVICES_RESOURCE))
+				.withRequestBody(equalToJson(
+						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(17, result.getTotalCount());
+		assertEquals(2, result.getRequestedCount());
+		assertEquals(1, result.getSkip());
+		assertEquals(2, result.getResults().size());
+		
+		ArrayList<DeviceDetails> deviceDetailsList = new ArrayList<DeviceDetails>(result.getResults());
+		
+		DeviceDetails deviceDetails1 = deviceDetailsList.get(0);
+		
+		assertEquals(2, deviceDetails1.getAttributes().size());
+		assertEquals("153ffceb982745e8b1e8abacf9c217f3", deviceDetails1.getDeviceId());
+		assertEquals("NextGen Car Company", deviceDetails1.getManufacturer());
+		assertEquals("DreamCar", deviceDetails1.getName());
+		assertEquals("4WD", deviceDetails1.getType());
+		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", deviceDetails1.getUri().toString());
+		
+		DeviceDetails deviceDetails2 = deviceDetailsList.get(0);
+		
+		assertEquals(2, deviceDetails2.getAttributes().size());
+		assertEquals("253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getDeviceId());
+		assertEquals("Test Car Company", deviceDetails2.getManufacturer());
+		assertEquals("Test Car", deviceDetails2.getName());
+		assertEquals("2WD", deviceDetails2.getType());
+		assertEquals("https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getUri().toString());
+
 	}
 	
 }

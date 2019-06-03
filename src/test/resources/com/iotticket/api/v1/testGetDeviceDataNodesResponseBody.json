@@ -1,0 +1,17 @@
+{
+  "fullSize": 9,
+  "limit": 2,
+  "offset": 0,
+  "items": [
+    {
+      "dataType": "boolean",
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=%2Fengine%2Fisrunning",
+      "name": "Engine/isRunning"
+    },
+    {
+      "dataType": "double",
+      "href": "https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=%2Flongitude",
+      "name": "longitude"
+    }
+  ]
+}

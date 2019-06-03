@@ -1,0 +1,37 @@
+{
+  "fullSize": 17,
+  "limit": 2,
+  "offset": 1,
+  "items": [
+    {
+      "attributes": [
+        {
+          "key": "EngineSize",
+          "value": "2.4"
+        },
+        {
+          "key": "FuelType",
+          "value": "Benzene"
+        }
+      ],
+      "createdAt": "2019-05-23T09:42:55UTC",
+      "deviceId": "153ffceb982745e8b1e8abacf9c217f3",
+      "enterpriseId": "TEST1234",
+      "enterpriseName": "Test Enterprise",
+      "href": "https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3",
+      "manufacturer": "NextGen Car Company",
+      "name": "DreamCar",
+      "type": "4WD"
+    },
+    {
+      "createdAt": "2019-05-23T09:40:35UTC",
+      "deviceId": "253ffceb982745e8b1e8abacf9c217f3",
+      "enterpriseId": "TESTS1234",
+      "enterpriseName": "Test Enterprise",
+      "href": "https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3",
+      "manufacturer": "Test Car Company",
+      "name": "Test car",
+      "type": "2WD"
+    }
+  ]
+}
