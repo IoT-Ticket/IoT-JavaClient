@@ -1,0 +1,7 @@
+{
+ 	"totalDevices": 3,
+	"maxNumberOfDevices": 5,
+	"maxDataNodePerDevice": 10,
+	"usedStorageSize": 1048576,
+	"maxStorageSize": 52428800
+}

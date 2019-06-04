@@ -1,0 +1,7 @@
+{ 
+	"deviceId":"153ffceb982745e8b1e8abacf9c217f3",
+	"totalRequestToday": 5000,
+	"maxReadRequestPerDay": 100000,
+	"numberOfDataNodes": 5,
+	"storageSize": 3072
+}
