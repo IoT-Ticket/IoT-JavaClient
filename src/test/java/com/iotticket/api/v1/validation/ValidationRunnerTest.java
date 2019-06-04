@@ -118,7 +118,7 @@ public class ValidationRunnerTest {
 		DeviceAttribute validDeviceAttribute = new DeviceAttribute("key", "value");
 		deviceAttributes.add(validDeviceAttribute);
 		
-		// Add dataNodeValue with missing value
+		// Add deviceAttribute with missing value
 		DeviceAttribute deviceAttributeWithMissingValue = new DeviceAttribute("key", null);
 		deviceAttributes.add(deviceAttributeWithMissingValue);
 		
