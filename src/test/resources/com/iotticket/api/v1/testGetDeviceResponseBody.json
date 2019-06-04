@@ -1,0 +1,20 @@
+{
+	"attributes": [
+    {
+      	"key": "EngineSize",
+      	"value": "2.4"
+    },
+    {
+     	 "key": "FuelType",
+      	"value": "Benzene"
+    }],
+  	"createdAt": "2019-06-03T07:50:08UTC",
+  	"deviceId": "153ffceb982745e8b1e8abacf9c217f3",
+  	"enterpriseId": "TEST1234",
+  	"enterpriseName": "Test Enterprise",
+  	"href": "https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3",
+  	"manufacturer": "NextGen Car Company",
+  	"name": "DreamCar",
+	"type": "4WD"
+  	
+}

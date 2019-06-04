@@ -136,28 +136,26 @@ public class IOTAPIClientDeviceTest{
 	}
 	
 	@Test 
-	@Ignore
 	public void testGetDevices() throws Exception {
 		
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
+		String getDevicesResource = TEST_DEVICES_RESOURCE + "?limit=2&offset=1";
+		
 		stubFor(get(
-				urlEqualTo(TEST_DEVICES_RESOURCE))
-				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+				urlEqualTo(getDevicesResource))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
-						.withBody(ResourceFileUtils.resourceFileToString("testRegisterDevice_invalidCredentialsResponseBody.json", getClass())))
+						.withHeader("Content-Type", "application/json")
+						.withBody(ResourceFileUtils.resourceFileToString("testGetDevicesResponseBody.json", getClass())))
 				);
 		
 		PagedResult<DeviceDetails> result = iotApiClient.getDeviceList(1, 2);
 		
 		verify(getRequestedFor(
-				urlEqualTo(TEST_DEVICES_RESOURCE))
-				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+				urlEqualTo(getDevicesResource))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(17, result.getTotalCount());
@@ -176,15 +174,45 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("4WD", deviceDetails1.getType());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", deviceDetails1.getUri().toString());
 		
-		DeviceDetails deviceDetails2 = deviceDetailsList.get(0);
+		DeviceDetails deviceDetails2 = deviceDetailsList.get(1);
 		
-		assertEquals(2, deviceDetails2.getAttributes().size());
+		assertEquals(0, deviceDetails2.getAttributes().size());
 		assertEquals("253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getDeviceId());
 		assertEquals("Test Car Company", deviceDetails2.getManufacturer());
-		assertEquals("Test Car", deviceDetails2.getName());
+		assertEquals("Test car", deviceDetails2.getName());
 		assertEquals("2WD", deviceDetails2.getType());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getUri().toString());
 
+	}
+	
+	@Test
+	public void testGetDevice() throws Exception {
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		String getDeviceResource = TEST_DEVICES_RESOURCE + TEST_DEVICE_ID + "/";
+		
+		stubFor(get(
+				urlEqualTo(getDeviceResource))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json")
+						.withBody(ResourceFileUtils.resourceFileToString("testGetDeviceResponseBody.json", getClass())))
+				);
+		
+		DeviceDetails result = iotApiClient.getDevice(TEST_DEVICE_ID);
+		
+		verify(getRequestedFor(
+				urlEqualTo(getDeviceResource))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(2, result.getAttributes().size());
+		assertEquals("153ffceb982745e8b1e8abacf9c217f3", result.getDeviceId());
+		assertEquals("NextGen Car Company", result.getManufacturer());
+		assertEquals("DreamCar", result.getName());
+		assertEquals("4WD", result.getType());
+		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", result.getUri().toString());
 	}
 	
 }

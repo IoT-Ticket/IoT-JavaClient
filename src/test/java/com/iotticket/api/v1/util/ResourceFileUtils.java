@@ -23,6 +23,7 @@ public class ResourceFileUtils {
 	 * @throws URISyntaxException
 	 */
 	
+	// TODO: Use Thread.currentThread().getContextClassLoader().getResourceAsStream().
 	public static String resourceFileToString(String filename, Class<?> clazz) throws IOException, URISyntaxException {
 		URL resourceUrl = clazz.getResource(filename);
 		if (resourceUrl == null) {
