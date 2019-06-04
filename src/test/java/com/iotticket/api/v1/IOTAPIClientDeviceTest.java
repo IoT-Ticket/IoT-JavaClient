@@ -37,7 +37,8 @@ public class IOTAPIClientDeviceTest{
 	
     private static final int WIREMOCK_PORT = 9999; 
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
-	
+    private static final String RESOURCE_FILE_LOCATION = "com/iotticket/api/v1/";
+    
     private static final String TEST_DEVICES_RESOURCE = "/devices/";
     
     private static final String TEST_USERNAME = "user1";
@@ -76,13 +77,13 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString("testRegisterDeviceResponseBody.json", getClass())))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceResponseBody.json")))
 				);
 		
 		DeviceDetails result = iotApiClient.registerDevice(device);
@@ -91,7 +92,7 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(result.getName(), TEST_DEVICE_NAME);
@@ -124,12 +125,12 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testRegisterDeviceRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, wrongPassword)
 				.willReturn(
 						aResponse()
 						.withStatus(401)
-						.withBody(ResourceFileUtils.resourceFileToString("testRegisterDevice_invalidCredentialsResponseBody.json", getClass())))
+						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_invalidCredentialsResponseBody.json")))
 				);
 		
 		iotApiClient.registerDevice(device);
@@ -149,7 +150,7 @@ public class IOTAPIClientDeviceTest{
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json")
-						.withBody(ResourceFileUtils.resourceFileToString("testGetDevicesResponseBody.json", getClass())))
+						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDevicesResponseBody.json")))
 				);
 		
 		PagedResult<DeviceDetails> result = iotApiClient.getDeviceList(1, 2);
@@ -198,7 +199,7 @@ public class IOTAPIClientDeviceTest{
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json")
-						.withBody(ResourceFileUtils.resourceFileToString("testGetDeviceResponseBody.json", getClass())))
+						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDeviceResponseBody.json")))
 				);
 		
 		DeviceDetails result = iotApiClient.getDevice(TEST_DEVICE_ID);

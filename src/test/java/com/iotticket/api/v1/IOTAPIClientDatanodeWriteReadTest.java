@@ -41,7 +41,8 @@ public class IOTAPIClientDatanodeWriteReadTest {
 	
 	private static final int WIREMOCK_PORT = 9999; 
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
-	
+    private static final String RESOURCE_FILE_LOCATION = "com/iotticket/api/v1/";
+    
     private static final String TEST_DATA_NODE_WRITE_RESOURCE = "/process/write/153ffceb982745e8b1e8abacf9c217f3/";
     private static final String TEST_DATA_NODE_READ_RESOURCE = "/process/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=Engine/isRunning,latitude,longitude&limit=3&fromdate=1546293600000&todate=1546380000000";
     private static final String TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE = "/devices/153ffceb982745e8b1e8abacf9c217f3/datanodes/?limit=2&offset=0";
@@ -70,13 +71,13 @@ public class IOTAPIClientDatanodeWriteReadTest {
 				urlEqualTo(TEST_DATA_NODE_WRITE_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testWriteDatanodes_oneDatanodeRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_oneDatanodeRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString("testWriteDatanodes_oneDatanodeResponseBody.json", getClass())))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_oneDatanodeResponseBody.json")))
 				);
 		
 		WriteDataResponse result = iotApiClient.writeData(TEST_DEVICE_ID, datanodeWriteValue);
@@ -85,7 +86,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 				urlEqualTo(TEST_DATA_NODE_WRITE_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testWriteDatanodes_oneDatanodeRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_oneDatanodeRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(1, result.getTotalWritten());
@@ -133,13 +134,13 @@ public class IOTAPIClientDatanodeWriteReadTest {
 				urlEqualTo(TEST_DATA_NODE_WRITE_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testWriteDatanodes_multipleDatanodesRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_multipleDatanodesRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString("testWriteDatanodes_multipleDatanodesResponseBody.json", getClass())))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_multipleDatanodesResponseBody.json")))
 				);
 		
 		WriteDataResponse result = iotApiClient.writeData(TEST_DEVICE_ID, datanodes);
@@ -148,7 +149,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 				urlEqualTo(TEST_DATA_NODE_WRITE_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString("testWriteDatanodes_multipleDatanodesRequestBody.json", getClass())))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testWriteDatanodes_multipleDatanodesRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(5, result.getTotalWritten());
@@ -181,7 +182,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString("testReadDatanodesResponseBody.json", getClass())))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testReadDatanodesResponseBody.json")))
 				);
 		
 		ProcessValues result = iotApiClient.readProcessData(datanodeQueryCriteria);
@@ -236,7 +237,7 @@ public class IOTAPIClientDatanodeWriteReadTest {
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString("testGetDeviceDataNodesResponseBody.json", getClass())))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDeviceDataNodesResponseBody.json")))
 				);
 		
 		PagedResult<Datanode> result = iotApiClient.getDeviceDataNodeList(TEST_DEVICE_ID, 0, 2);
