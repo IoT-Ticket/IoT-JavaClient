@@ -1,0 +1,6 @@
+{
+	"description": "Re-check device id and ensure device access is valid",
+	"code": 8001,
+	"moreInfo": "https://my.iot-ticket.com/api/v1/errorcodes",
+	"apiver": 1
+}

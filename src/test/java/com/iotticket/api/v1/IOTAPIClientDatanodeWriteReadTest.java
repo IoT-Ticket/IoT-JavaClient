@@ -11,6 +11,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,9 +28,11 @@ import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.model.DataType;
 import com.iotticket.api.v1.model.Datanode;
 import com.iotticket.api.v1.model.DatanodeQueryCriteria;
+import com.iotticket.api.v1.model.ErrorInfo;
 import com.iotticket.api.v1.model.PagedResult;
 import com.iotticket.api.v1.model.ProcessValues;
 import com.iotticket.api.v1.model.Datanode.DatanodeRead;
@@ -221,9 +225,56 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		
 		ArrayList<DatanodeReadValue> datanodeReadValues3 = new ArrayList<DatanodeReadValue>(datanodeRead3.getDatanodeReadValues());
 		assertEquals("63.096", datanodeReadValues3.get(0).getValue());
-		assertEquals(1546293601000L, datanodeReadValues3.get(0).getTimestampMilliSeconds());
+		assertEquals(1546293601000L, datanodeReadValues3.get(0).getTimestampMilliSeconds());	
+	}
+	
+	@Test
+	public void testReadDatanodes_noDataNodesFound() throws Exception {
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+
+		String datapoint1 = "latitude";
+		String datapoint2 = "longitude";
+		String datapoint3 = "Engine/isRunning";
+
+		DatanodeQueryCriteria datanodeQueryCriteria = new DatanodeQueryCriteria(TEST_DEVICE_ID, datapoint1, datapoint2, datapoint3);
+		
+		Date fromDate = new Date(1546293600000L);
+		Date toDate = new Date(1546380000000L);
+		
+		datanodeQueryCriteria.setFromDate(fromDate);
+		datanodeQueryCriteria.setToDate(toDate);
+		
+		datanodeQueryCriteria.setLimit(3);
+		
+		stubFor(get(
+				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(400)
+						.withHeader("Content-Type", "application/json").
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testReadDatanodes_noDatanodesFoundResponseBody.json")))
+				);
+		
+		try {
+			iotApiClient.readProcessData(datanodeQueryCriteria);
+			fail("Expected IoTServerCommunicationException");
+		} catch (IoTServerCommunicationException exception) {
+			assertEquals("Request with server was unsuccesful, check the errorInfo object for further details", exception.getMessage());
+			
+			ErrorInfo errorInfo = exception.getErrorInfo();
+			assertEquals("The datanode(s) requested couldn't be found. Re-check request and try again", errorInfo.description);
+			assertEquals(8003, errorInfo.code);
+			assertEquals("https://my.iot-ticket.com/api/v1/errorcodes", errorInfo.moreInfo);
+			assertEquals(1, errorInfo.apiver);
+		}
+		
+		verify(getRequestedFor(
+				urlEqualTo(TEST_DATA_NODE_READ_RESOURCE))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 	}
+	
 	
 	@Test
 	public void testGetDeviceDataNodes() throws Exception {
@@ -261,7 +312,33 @@ public class IOTAPIClientDatanodeWriteReadTest {
 		assertEquals(DataType.DoubleType, datanode2.getDataType());
 		assertEquals("longitude", datanode2.getName());
 		assertEquals("https://my.iot-ticket.com/api/v1/process/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=%2Flongitude", datanode2.getUri().toString());
+	}
+	
+	
+	@Test
+	public void testGetDeviceDataNodes_noDatanodesFound() throws Exception {
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
+		stubFor(get(
+				urlEqualTo(TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json").
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDeviceDataNodes_noDatanodesFoundResponseBody.json")))
+				);
+		
+		PagedResult<Datanode> result = iotApiClient.getDeviceDataNodeList(TEST_DEVICE_ID, 0, 2);
+		
+		verify(getRequestedFor(
+				urlEqualTo(TEST_DATA_GET_DEVICE_DATA_NODES_RESOURCE))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(0, result.getTotalCount());
+		assertEquals(2, result.getRequestedCount());
+		assertEquals(0, result.getSkip());
+		assertTrue(result.getResults().isEmpty());
 	}
 	
 }

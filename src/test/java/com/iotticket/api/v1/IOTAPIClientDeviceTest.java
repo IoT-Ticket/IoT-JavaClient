@@ -3,21 +3,22 @@ package com.iotticket.api.v1;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -28,6 +29,7 @@ import com.iotticket.api.v1.exception.ValidAPIParamException;
 import com.iotticket.api.v1.model.Device;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
 import com.iotticket.api.v1.model.DeviceAttribute;
+import com.iotticket.api.v1.model.ErrorInfo;
 import com.iotticket.api.v1.model.PagedResult;
 import com.iotticket.api.v1.util.ResourceFileUtils;
 
@@ -50,9 +52,11 @@ public class IOTAPIClientDeviceTest{
 	private static final String TEST_DEVICE_DESCRIPTION = "The main server";
 	
 	private static final String TEST_DEVICE_ID = "153ffceb982745e8b1e8abacf9c217f3";
-	    	
+	    
+	
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
+	
 	
 	@Test
 	public void testRegisterDevice() throws ValidAPIParamException, IOException, URISyntaxException{
@@ -100,7 +104,7 @@ public class IOTAPIClientDeviceTest{
 		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
 	}
 	
-	@Test(expected = IoTServerCommunicationException.class)
+	
 	public void testRegisterDevice_invalidCredentials() throws ValidAPIParamException, IOException, URISyntaxException{
 		
 		String wrongPassword = "pw2";
@@ -133,9 +137,28 @@ public class IOTAPIClientDeviceTest{
 						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_invalidCredentialsResponseBody.json")))
 				);
 		
-		iotApiClient.registerDevice(device);
+		try {
+			iotApiClient.registerDevice(device);
+			fail("Expected IoTServerCommunicationException");
+		} catch (IoTServerCommunicationException exception) {
+			assertEquals("Request with server was unsuccesful, check the errorInfo object for further details", exception.getMessage());
+			
+			ErrorInfo errorInfo = exception.getErrorInfo();
+			assertEquals("Provide a valid authorization credential", errorInfo.description);
+			assertEquals(8001, errorInfo.code);
+			assertEquals("https://my.iot-ticket.com/api/v1/errorcodes", errorInfo.moreInfo);
+			assertEquals(1, errorInfo.apiver);
+		}
+		
+		verify(postRequestedFor(
+				urlEqualTo(TEST_DEVICES_RESOURCE))
+				.withHeader("Accept", equalTo("application/json"))
+				.withRequestBody(equalToJson(
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));	
 	}
-	
+
+
 	@Test 
 	public void testGetDevices() throws Exception {
 		
@@ -187,6 +210,34 @@ public class IOTAPIClientDeviceTest{
 	}
 	
 	@Test
+	public void testGetDevices_noDevicesFound() throws Exception {
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		String getDevicesResource = TEST_DEVICES_RESOURCE + "?limit=10&offset=0";
+		
+		stubFor(get(
+				urlEqualTo(getDevicesResource))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json")
+						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDevices_noDevicesFoundResponseBody.json")))
+				);
+		
+		PagedResult<DeviceDetails> result = iotApiClient.getDeviceList(0, 10);
+		
+		verify(getRequestedFor(
+				urlEqualTo(getDevicesResource))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(0, result.getTotalCount());
+		assertEquals(10, result.getRequestedCount());
+		assertEquals(0, result.getSkip());
+		assertTrue(result.getResults().isEmpty());
+	}
+
+	@Test
 	public void testGetDevice() throws Exception {
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
@@ -214,6 +265,38 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("DreamCar", result.getName());
 		assertEquals("4WD", result.getType());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", result.getUri().toString());
+	}
+	
+	
+	@Test
+	public void testGetDevice_deviceNotFound() throws Exception {
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		String invalidDeviceId = "01234567892745e8b1e8abacf9c21123";
+		String getDeviceResource = TEST_DEVICES_RESOURCE + invalidDeviceId + "/";
+		
+		stubFor(get(
+				urlEqualTo(getDeviceResource))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(403)
+						.withHeader("Content-Type", "application/json")
+						.withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testGetDevice_deviceNotFoundResponseBody.json")))
+				);
+		
+		try {
+			iotApiClient.getDevice(invalidDeviceId);
+			fail();
+		} catch (IoTServerCommunicationException exception) {
+			assertEquals("Request with server was unsuccesful, check the errorInfo object for further details", exception.getMessage());
+			
+			ErrorInfo errorInfo = exception.getErrorInfo();
+			assertEquals("Re-check device id and ensure device access is valid", errorInfo.description);
+			assertEquals(8001, errorInfo.code);
+			assertEquals("https://my.iot-ticket.com/api/v1/errorcodes", errorInfo.moreInfo);
+			assertEquals(1, errorInfo.apiver);
+		}
 	}
 	
 }

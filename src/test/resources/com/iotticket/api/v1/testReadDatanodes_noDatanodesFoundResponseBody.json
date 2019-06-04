@@ -1,0 +1,6 @@
+{
+  	"description": "The datanode(s) requested couldn't be found. Re-check request and try again",
+  	"code": 8003,
+ 	"moreInfo": "https://my.iot-ticket.com/api/v1/errorcodes",
+	"apiver": 1
+}
