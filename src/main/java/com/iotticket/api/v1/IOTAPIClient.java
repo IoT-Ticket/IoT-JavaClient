@@ -35,6 +35,7 @@ public class IOTAPIClient {
     private final static String DatanodesResourceFormat = SpecificDeviceResourceFormat + "datanodes/";
     private final static String WriteDataResourceFormat = "process/write/{deviceId}/";
     private final static String ReadDataResourceFormat = "process/read/{deviceId}/";
+    private final static String ReadStatisticalDataResourceFormat = "stat/read/{deviceId}";
     private final static String QuotaAllResource = "quota/all/";
     private final static String QuotaDeviceResourceFormat = "quota/{deviceId}/";
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create();
@@ -217,6 +218,26 @@ public class IOTAPIClient {
         }
         return pv;
 
+    }
+    
+    // TODO: add javadoc
+    public StatisticalDataValues readStatisticalData(StatisticalDataQueryCriteria criteria) {
+        WebTarget target = baseTarget.path(ReadStatisticalDataResourceFormat);
+        
+        target = target.resolveTemplate("deviceId", criteria.getDeviceId());
+        target = target.queryParam("datanodes", criteria.getDataNodePaths());
+        target = target.queryParam("grouping", criteria.getGrouping());
+        target = target.queryParam("fromdate", criteria.getFromDate());
+        target = target.queryParam("todate", criteria.getToDate());
+        
+        if (criteria.getSortOrder() != null) {
+            target = target.queryParam("order", criteria.getSortOrder().name());
+        }
+        
+        Response res = target.request().accept(JSON).get();
+        
+        StatisticalDataValues values = getResponse(res, StatisticalDataValues.class);
+        return values;
     }
 
 

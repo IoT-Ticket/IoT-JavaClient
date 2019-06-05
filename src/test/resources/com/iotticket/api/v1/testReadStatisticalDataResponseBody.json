@@ -1,0 +1,33 @@
+{
+	"href": "https://my.iot-ticket.com/api/v1/stat/read/153ffceb982745e8b1e8abacf9c217f3?todate=1546293802000&datanodes=latitude&fromdate=1546293600000",
+	"datanodeReads": [
+		{
+			"dataType": "double",
+			"unit": "bar",
+			"name": "Pressure",
+			"values": [
+				{
+					"count": 0,
+					"sum": 0,
+					"ts": 1483228800000
+				},
+				{
+					"min": 34.5,
+					"max": 65.7,
+					"avg": 45.0,
+					"count": 6546,
+					"sum": 7674.6,
+					"ts": 1514764800000
+				},
+				{
+					"min": 32.5,
+					"max": 67.8,
+					"avg": 46.4,
+					"count": 3423,
+					"sum": 7564.2,
+					"ts": 1546300800000
+				}
+			]
+		}
+	]
+}
