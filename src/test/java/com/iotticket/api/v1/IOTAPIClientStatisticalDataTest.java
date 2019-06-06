@@ -38,8 +38,8 @@ public class IOTAPIClientStatisticalDataTest {
     private static final String TEST_BASE_URL = "http://localhost:" + String.valueOf(WIREMOCK_PORT) + "/";
     private static final String RESOURCE_FILE_LOCATION = "com/iotticket/api/v1/";
     
-    private static final String TEST_STATISTICAL_DATA_READ_RESOURCE = "/stat/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=latitude&grouping=Minute&fromdate=1546293600000&todate=1546293802000";
-    private static final String TEST_STATISTICAL_DATA_MULTIPLE_VTAGS_READ_RESOURCE = "/stat/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=latitude&grouping=Minute&fromdate=1546293600000&todate=1546293802000&vtags=vtag1,vtag2";
+    private static final String TEST_STATISTICAL_DATA_READ_RESOURCE = "/stat/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=latitude&grouping=Minute&fromdate=1546293600000&todate=1546293802000";
+    private static final String TEST_STATISTICAL_DATA_MULTIPLE_VTAGS_READ_RESOURCE = "/stat/read/153ffceb982745e8b1e8abacf9c217f3/?datanodes=latitude&grouping=Minute&fromdate=1546293600000&todate=1546293802000&vtags=vtag1,vtag2";
     
     private static final String TEST_USERNAME = "user1";
 	private static final String TEST_PASSWORD = "pw1";

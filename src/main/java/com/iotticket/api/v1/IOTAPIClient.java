@@ -12,6 +12,7 @@ import com.iotticket.api.v1.model.Datanode.DatanodeRead;
 import com.iotticket.api.v1.model.Datanode.DatanodeReadValue;
 import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
 import com.iotticket.api.v1.model.Device.DeviceDetails;
+import com.iotticket.api.v1.model.Enterprise.EnterpriseList;
 import com.iotticket.api.v1.validation.ValidationRunner;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
@@ -35,7 +36,9 @@ public class IOTAPIClient {
     private final static String DatanodesResourceFormat = SpecificDeviceResourceFormat + "datanodes/";
     private final static String WriteDataResourceFormat = "process/write/{deviceId}/";
     private final static String ReadDataResourceFormat = "process/read/{deviceId}/";
-    private final static String ReadStatisticalDataResourceFormat = "stat/read/{deviceId}";
+    private final static String ReadStatisticalDataResourceFormat = "stat/read/{deviceId}/";
+    private static final String RootEnterprisesResourceFormat = "enterprises/";
+    private static final String SubEnterprisesResourceFormat = "enterprises/{enterpriseId}/";
     private final static String QuotaAllResource = "quota/all/";
     private final static String QuotaDeviceResourceFormat = "quota/{deviceId}/";
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create();
@@ -248,6 +251,36 @@ public class IOTAPIClient {
         
         StatisticalDataValues values = getResponse(res, StatisticalDataValues.class);
         return values;
+    }
+    
+    
+    /**
+    *
+    * @param offset The amount to skip from the beginning
+    * @param limit The maximum amount of result to be returned
+    * @return Get a list of root enterprises the client has access to
+    *  Obtain items list using {@link PagedResult#getResults}
+    */
+    public PagedResult<Enterprise> getRootEnterprises(int limit, int offset) {
+    	WebTarget target = baseTarget.path(RootEnterprisesResourceFormat).queryParam("limit", limit).queryParam("offset", offset);
+    	
+    	Response res = target.request().accept(JSON).get();
+    	return getResponse(res, EnterpriseList.class);
+    }
+    
+    /**
+    * Get enterprises under enterprise with the provided resource id
+    * @param enterpriseId Resource id of the enterprise
+    * @param offset The amount to skip from the beginning
+    * @param limit The maximum amount of result to be returned
+    * @return Get a list of sub enterprises under the enterprise with provided resource id. 
+    *  Obtain items list using {@link PagedResult#getResults}
+    */
+    public PagedResult<Enterprise> getSubEnterprises(String enterpriseId, int limit, int offset) {
+    	WebTarget target = baseTarget.path(SubEnterprisesResourceFormat).resolveTemplate("enterpriseId", enterpriseId).queryParam("limit", limit).queryParam("offset", offset);
+    	
+    	Response res = target.request().accept(JSON).get();
+    	return getResponse(res, EnterpriseList.class);
     }
     
     

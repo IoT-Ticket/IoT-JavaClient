@@ -1,0 +1,19 @@
+{
+	"fullSize": 15,
+	"limit": 10,
+	"offset": 0,
+	"items": [
+		{
+			"href": "https://my.iot-ticket.com/api/v1/enterprises/5678",
+			"name": "Enterprise 3",
+			"resourceId": "E5678",
+			"hasSubEnterprises": true
+		},
+		{
+			"href": "https://my.iot-ticket.com/api/v1/enterprises/6789",
+			"name": "Enterprise 4",
+			"resourceId": "E6789",
+			"hasSubEnterprises": false
+		}
+	]
+}
