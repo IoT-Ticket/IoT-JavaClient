@@ -220,13 +220,19 @@ public class IOTAPIClient {
 
     }
     
-    // TODO: add javadoc
+    /**
+     * Note that minimum, average and maximum might be <b>null</b> in <tt>StatisticalDataReadValue</tt> if time interval
+     * contained no suitable values for calculating statistics.
+     * @param criteria The <tt>StatisticalDataQueryCriteria</tt> object used to query for the statistical values
+     * @return Statistical data returned as <tt>StatisticalDataValues</tt> object
+     * @See StatisticalDataQueryCriteria
+     */
     public StatisticalDataValues readStatisticalData(StatisticalDataQueryCriteria criteria) {
         WebTarget target = baseTarget.path(ReadStatisticalDataResourceFormat);
         
         target = target.resolveTemplate("deviceId", criteria.getDeviceId());
-        target = target.queryParam("datanodes", criteria.getDataNodePaths());
-        target = target.queryParam("grouping", criteria.getGrouping());
+        target = target.queryParam("datanodes", criteria.getDataPathsAsString());
+        target = target.queryParam("grouping", criteria.getGrouping().name());
         target = target.queryParam("fromdate", criteria.getFromDate());
         target = target.queryParam("todate", criteria.getToDate());
         
@@ -234,13 +240,17 @@ public class IOTAPIClient {
             target = target.queryParam("order", criteria.getSortOrder().name());
         }
         
+        if (!criteria.getVtags().isEmpty()) {
+            target = target.queryParam("vtags", criteria.getVtagsAsString());
+        }
+        
         Response res = target.request().accept(JSON).get();
         
         StatisticalDataValues values = getResponse(res, StatisticalDataValues.class);
         return values;
     }
-
-
+    
+    
     /**
      *
      * @return Fetches the user's <tt>Quota</tt> information from the server

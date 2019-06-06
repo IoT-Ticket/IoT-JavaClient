@@ -21,7 +21,6 @@ public class DeviceQuota {
         this.totalRequestToday = totalRequestToday;
     }
 
-
     /**
      * @return The max number of read request allowed to the client for this device.
      */

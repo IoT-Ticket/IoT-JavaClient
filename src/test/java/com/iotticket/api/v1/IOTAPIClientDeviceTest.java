@@ -10,6 +10,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -23,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.exception.ValidAPIParamException;
@@ -55,7 +57,7 @@ public class IOTAPIClientDeviceTest{
 	    
 	
 	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
+	public WireMockRule wireMockRule = new WireMockRule(options().port(WIREMOCK_PORT).notifier(new ConsoleNotifier(false)));
 	
 	
 	@Test

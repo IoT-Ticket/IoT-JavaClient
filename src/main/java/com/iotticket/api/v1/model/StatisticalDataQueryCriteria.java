@@ -14,12 +14,10 @@ import com.iotticket.api.v1.model.DatanodeQueryCriteria.Order;
  * from server
  * <p>
  * The deviceId, grouping, fromDate, toDate and the names or full path of the datanodes
- * to be queried most be supplied
+ * to be queried must be supplied.
  * </p>
  */
 
-// TODO: Most of the code is currently just copied from DataNodeQueryCriteria.
-// Maybe do some refactoring to existing code to avoid duplicate code.
 public class StatisticalDataQueryCriteria {
 
 	private String deviceId;
@@ -28,6 +26,7 @@ public class StatisticalDataQueryCriteria {
     private Long toDate;
     private Set<String> dataPaths = new HashSet<String>();
     private Grouping grouping;
+    private Set<String> vtags = new HashSet<String>();
     
 	public StatisticalDataQueryCriteria(String deviceId, Grouping grouping, Date fromDate, Date toDate, String... datapoints) {
 		setDeviceId(deviceId);
@@ -97,18 +96,8 @@ public class StatisticalDataQueryCriteria {
         this.sortOrder = sortOrder;
     }
 
-    public String getDataNodePaths() {
-        StringBuilder sb = new StringBuilder();
-
-        String[] strings = dataPaths.toArray(new String[dataPaths.size()]);
-        int len = strings.length;
-        for (int i = 0; i < len; i++) {
-            sb.append(strings[i]);
-            if (i != (len - 1)) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
+    public String getDataPathsAsString() {
+        return getUrlParameterString(getDataPaths());
     }
 
     public Set<String> getDataPaths() {
@@ -170,15 +159,44 @@ public class StatisticalDataQueryCriteria {
 		if (grouping == null) {
 			throw new IllegalArgumentException("Grouping must be set");
 		}
+		this.grouping = grouping;
 	}
 	
 	public Grouping getGrouping() {
 		return grouping;
 	}
 	
-	// TODO: vtags not included in DatanodeQueryCriteria so should we also leave 
-	// them out from here?
+	public Set<String> getVtags() {
+		return vtags;
+	}
 	
+	public void setVtags(Set<String> vtags) {
+		this.vtags = vtags;
+	}
+	
+	/**
+	 * 
+	 * @return Returns a string that contains vtags separated with 
+	 * comma.
+	 */
+	public String getVtagsAsString() {
+		return getUrlParameterString(getVtags());
+	}
+	
+	private String getUrlParameterString(Collection<String> collection) {
+        StringBuilder sb = new StringBuilder();
+
+        String[] strings = collection.toArray(new String[collection.size()]);
+        int len = strings.length;
+        for (int i = 0; i < len; i++) {
+            sb.append(strings[i]);
+            if (i != (len - 1)) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+	}
+
 	public static enum Grouping {
 		Minute,
 		Hour,

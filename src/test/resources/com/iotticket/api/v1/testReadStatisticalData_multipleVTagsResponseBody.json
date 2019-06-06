@@ -1,0 +1,20 @@
+{
+  "href": "https://my.iot-ticket.com/api/v1/stat/read/153ffceb982745e8b1e8abacf9c217f3?datanodes=latitude&grouping=Minute&fromdate=1546293600000&todate=1546293802000&vtags=vtag1,vtag2",
+  "datanodeReads": [
+    {
+      "dataType": "long",
+      "unit": "",
+      "name": "number1",
+      "values": [
+        {
+          "min": 2.0,
+          "max": 5.0,
+          "avg": 3.5,
+          "count": 3,
+          "sum": 10.0,
+          "ts": 1546293600000
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import com.google.gson.annotations.SerializedName;
 
+
 public class StatisticalDataValues {
 	
     @SerializedName("href")
@@ -38,73 +39,81 @@ public class StatisticalDataValues {
 	}
 	
 	public static class StatisticalDataReadValue {
-		
+				
 		@SerializedName("min")
-		private String minimum;
+		private Double minimum;
 		
 		@SerializedName("max")
-		private String maximum;
+		private Double maximum;
 		
 		@SerializedName("avg")
-		private String average;
+		private Double average;
 		
-		private long count;
+		private Long count;
 		
-		private String sum;
+		private Double sum;
 				
 		@SerializedName("ts")
-		private long timestampMilliSeconds;
+		private Long timestampMilliSeconds;
 		
-		public String getMinimum() {
+		/**
+		 * @return Minimum value, or <b>null</b> if time interval had no values.
+		 */
+		public Double getMinimum() {
+			getClass().getClassLoader().getResource("");
 			return minimum;
 		}
 		
-		public void setMinimum(String minimum) {
+		public void setMinimum(Double minimum) {
 			this.minimum = minimum;
 		}
 		
-		public String getMaximum() {
+		/**
+		 * @return Maximum value, or <b>null</b> if time interval had no values.
+		 */
+		public Double getMaximum() {
 			return maximum;
 		}
 		
-		public void setMaximum(String maximum) {
+		public void setMaximum(Double maximum) {
 			this.maximum = maximum;
 		}
 		
-		public String getAverage() {
+		/**
+		 * @return Average value, or <b>null</b> if time interval had no values.
+		 */
+		public Double getAverage() {
 			return average;
 		}
 		
-		public void setAverage(String average) {
+		public void setAverage(Double average) {
 			this.average = average;
 		}
 		
-		public long getCount() {
+		public Long getCount() {
 			return count;
 		}
 		
-		public void setCount(long count) {
+		public void setCount(Long count) {
 			this.count = count;
 		}
 		
-		public String getSum() {
+		public Double getSum() {
 			return sum;
 		}
 		
-		public void setSum(String sum) {
+		public void setSum(Double sum) {
 			this.sum = sum;
 		}
 		
-		public long getTimestampMilliSeconds() {
+		public Long getTimestampMilliSeconds() {
 			return timestampMilliSeconds;
 		}
 		
-		public void setTimestampMilliSeconds(long timestampMilliSeconds) {
+		public void setTimestampMilliSeconds(Long timestampMilliSeconds) {
 			this.timestampMilliSeconds = timestampMilliSeconds;
 		}
-		
-		// TODO: Object->getConvertedValue
-		// TODO: Should we have data type also in here (see: datanodereadvalue)
+
 	}
 	
 	
