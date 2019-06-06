@@ -9,11 +9,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-
-import javax.lang.model.element.PackageElement;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +19,6 @@ import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.iotticket.api.v1.model.Enterprise;
 import com.iotticket.api.v1.model.PagedResult;
-import com.iotticket.api.v1.model.Quota;
 import com.iotticket.api.v1.util.ResourceFileUtils;
 
 public class IOTAPIClientEnterpriseTest {

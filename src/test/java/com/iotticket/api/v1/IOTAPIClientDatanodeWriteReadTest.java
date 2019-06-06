@@ -15,14 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.TimeZone;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,13 +29,13 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.iotticket.api.v1.exception.IoTServerCommunicationException;
 import com.iotticket.api.v1.model.DataType;
 import com.iotticket.api.v1.model.Datanode;
+import com.iotticket.api.v1.model.Datanode.DatanodeRead;
+import com.iotticket.api.v1.model.Datanode.DatanodeReadValue;
+import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
 import com.iotticket.api.v1.model.DatanodeQueryCriteria;
 import com.iotticket.api.v1.model.ErrorInfo;
 import com.iotticket.api.v1.model.PagedResult;
 import com.iotticket.api.v1.model.ProcessValues;
-import com.iotticket.api.v1.model.Datanode.DatanodeRead;
-import com.iotticket.api.v1.model.Datanode.DatanodeReadValue;
-import com.iotticket.api.v1.model.Datanode.DatanodeWriteValue;
 import com.iotticket.api.v1.model.WriteDataResponse;
 import com.iotticket.api.v1.util.ResourceFileUtils;
 

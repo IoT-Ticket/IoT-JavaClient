@@ -45,8 +45,6 @@ public class Enterprise {
 		this.hasSubEnterprises = hasSubEnterprises;
 	}
 
-
-
 	public static class EnterpriseList extends PagedResult<Enterprise> {
     	
     }

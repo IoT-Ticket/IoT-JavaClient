@@ -3,19 +3,15 @@ package com.iotticket.api.v1;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +25,6 @@ import com.iotticket.api.v1.model.StatisticalDataQueryCriteria.Grouping;
 import com.iotticket.api.v1.model.StatisticalDataValues;
 import com.iotticket.api.v1.model.StatisticalDataValues.StatisticalDataRead;
 import com.iotticket.api.v1.model.StatisticalDataValues.StatisticalDataReadValue;
-
 import com.iotticket.api.v1.util.ResourceFileUtils;
 
 public class IOTAPIClientStatisticalDataTest {
