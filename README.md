@@ -13,7 +13,7 @@ in doubt, a good flow will be to get the list of already created devices and val
 existence on the server through its name and attributes. Once the device is registered and the
 device id is obtained, clients can immediately start sending measurement values to the server.
 
-<pre><code>
+```java
 
     final String userName = "username";
     final String pwd = "password";
@@ -28,11 +28,11 @@ device id is obtained, clients can immediately start sending measurement values 
 
     DeviceDetails deviceDetails = client.registerDevice(d);
     System.out.println("This is the device id that should be used in subsequent calls when sending measurement data: " + deviceDetails.getDeviceId());
-</code></pre>
+```
 
 ### Send measurement data
 
-<pre><code>
+```java
 
     Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
@@ -45,10 +45,10 @@ device id is obtained, clients can immediately start sending measurement values 
 
     WriteDataResponse writeResult = client.writeData(deviceId, dnwrite);
      
-</code></pre>
+```
 
 ### Read measurement data
-<pre><code>
+```java
 
     DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, "Engine/Primary/Airflow", "datapoint2", "datapoint3");
     crit.setLimit(50);
@@ -65,11 +65,11 @@ device id is obtained, clients can immediately start sending measurement values 
         }
     }
     
-</code></pre>
+```
 
 ### Read statistical data
 
-<pre><code>
+```java
 		
 	StatisticalDataQueryCriteria criteria = new StatisticalDataQueryCriteria("<deviceId>", Grouping.Minute, 1546293600000L, 1546293604000L, "number2");
 	
@@ -89,11 +89,11 @@ device id is obtained, clients can immediately start sending measurement values 
 			
 	}
 
-</code></pre>
+```
 
 ### Get root enterprises
 
-<pre><code>
+```java
 		
 	PagedResult<Enterprise> enterprises = client.getRootEnterprises(10, 0);
 		
@@ -106,11 +106,11 @@ device id is obtained, clients can immediately start sending measurement values 
 		System.out.println(enterprise.getHasSubEnterprises());	
 	}		
 
-</code></pre>
+```
 
 ### Get sub enterprises
 	
-<pre><code>
+```java
 		
 	PagedResult<Enterprise> enterprises = client.getSubEnterprises("5506", 10, 0);
 	
@@ -123,7 +123,7 @@ device id is obtained, clients can immediately start sending measurement values 
 	}		
 }
 
-</code></pre>
+```
 
 ## API documentation
 
