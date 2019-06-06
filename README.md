@@ -64,9 +64,11 @@ device id is obtained, clients can immediately start sending measurement values 
 
         }
     }
+    
 </code></pre>
 
 ### Read statistical data
+
 <pre><code>
 		
 	StatisticalDataQueryCriteria criteria = new StatisticalDataQueryCriteria("<deviceId>", Grouping.Minute, 1546293600000L, 1546293604000L, "number2");
@@ -107,7 +109,6 @@ device id is obtained, clients can immediately start sending measurement values 
 </code></pre>
 
 ### Get sub enterprises
-
 	
 <pre><code>
 		
@@ -123,7 +124,6 @@ device id is obtained, clients can immediately start sending measurement values 
 }
 
 </code></pre>
-
 
 ## API documentation
 
