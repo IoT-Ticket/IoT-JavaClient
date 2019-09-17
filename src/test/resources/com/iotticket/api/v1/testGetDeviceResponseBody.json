@@ -10,7 +10,7 @@
     }],
   	"createdAt": "2019-06-03T07:50:08UTC",
   	"deviceId": "153ffceb982745e8b1e8abacf9c217f3",
-  	"enterpriseId": "TEST1234",
+  	"enterpriseId": "E123",
   	"enterpriseName": "Test Enterprise",
   	"href": "https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3",
   	"manufacturer": "NextGen Car Company",

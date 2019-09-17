@@ -24,6 +24,8 @@ public class Device implements Validatable {
     @APIRequirement(maxLength = 255)
     private String description;
 
+    private String enterpriseId;
+    
     @APIRequirement(maxLength = 50)
     private Collection<DeviceAttribute> attributes = new HashSet<DeviceAttribute>();
 
@@ -51,7 +53,15 @@ public class Device implements Validatable {
         this.type = type;
     }
 
-    public String getDescription() {
+    public String getEnterpriseId() {
+		return enterpriseId;
+	}
+
+	public void setEnterpriseId(String enterpriseId) {
+		this.enterpriseId = enterpriseId;
+	}
+
+	public String getDescription() {
         return description;
     }
 
@@ -92,6 +102,11 @@ public class Device implements Validatable {
             builder.append(description);
             builder.append(", ");
         }
+        if (enterpriseId != null) {
+            builder.append("enterpriseId=");
+            builder.append(enterpriseId);
+            builder.append(", ");
+        }
         if (attributes != null) {
             builder.append("attributes=");
             builder.append(attributes);
@@ -110,6 +125,7 @@ public class Device implements Validatable {
         private URI uri;
         private String deviceId;
         private Date createdAt;
+        private String enterpriseName;
 
         public URI getUri() {
             return uri;
@@ -134,14 +150,23 @@ public class Device implements Validatable {
         public void setCreatedAt(Date createdAt) {
             this.createdAt = createdAt;
         }
+        
+        public String getEnterpriseName() {
+			return enterpriseName;
+		}
 
+		public void setEnterpriseName(String enterpriseName) {
+			this.enterpriseName = enterpriseName;
+		}
 
-        @Override
+		@Override
         public String toString() {
             return "DeviceDetails{" +
                     "uri='" + uri + '\'' +
                     ", deviceId='" + deviceId + '\'' +
-                    ", createdAt='" + createdAt + '\'' + super.toString() +
+                    ", createdAt='" + createdAt + '\'' + 
+                    ", enterpriseName='" + enterpriseName + '\'' +
+                    super.toString() +
                     '}';
         }
     }

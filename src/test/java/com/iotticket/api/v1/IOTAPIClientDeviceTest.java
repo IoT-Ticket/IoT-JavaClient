@@ -12,6 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -51,6 +52,8 @@ public class IOTAPIClientDeviceTest{
 	private static final String TEST_DEVICE_NAME = "Test device";
 	private static final String TEST_DEVICE_MANUFACTURER = "Test Oy";
 	private static final String TEST_DEVICE_TYPE = "PC";
+	private static final String TEST_ENTERPRISE_ID = "E123";
+	private static final String TEST_ENTERPRISE_NAME = "Test Enterprise";
 	private static final String TEST_DEVICE_DESCRIPTION = "The main server";
 	
 	private static final String TEST_DEVICE_ID = "153ffceb982745e8b1e8abacf9c217f3";
@@ -61,7 +64,51 @@ public class IOTAPIClientDeviceTest{
 	
 	
 	@Test
-	public void testRegisterDevice() throws ValidAPIParamException, IOException, URISyntaxException{
+	public void testRegisterDevice_withRequiredPropertiesOnly() throws ValidAPIParamException, IOException, URISyntaxException{
+		
+		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
+		
+		Device device = new Device();
+		device.setName(TEST_DEVICE_NAME);
+		device.setManufacturer(TEST_DEVICE_MANUFACTURER);
+		
+		stubFor(post(
+				urlEqualTo(TEST_DEVICES_RESOURCE))
+				.withHeader("Accept", equalTo("application/json"))
+				.withRequestBody(equalToJson(
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withRequiredPropertiesOnlyRequestBody.json")))
+				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+				.willReturn(
+						aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json").
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withRequiredPropertiesOnlyResponseBody.json")))
+				);
+		
+		DeviceDetails result = iotApiClient.registerDevice(device);
+		
+		verify(postRequestedFor(
+				urlEqualTo(TEST_DEVICES_RESOURCE))
+				.withHeader("Accept", equalTo("application/json"))
+				.withRequestBody(equalToJson(
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withRequiredPropertiesOnlyRequestBody.json")))
+				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
+		
+		assertEquals(result.getName(), TEST_DEVICE_NAME);
+		assertEquals(result.getManufacturer(), TEST_DEVICE_MANUFACTURER);
+		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
+		
+		// If enterprise id is not defined in request body, user's root enterprise is returned here according to documentation.
+		assertEquals(result.getEnterpriseId(), TEST_ENTERPRISE_ID);
+		assertEquals(result.getEnterpriseName(), TEST_ENTERPRISE_NAME);
+		assertEquals(result.getType(), null);
+		assertEquals(result.getDescription(), null);
+		assertTrue(result.getAttributes().isEmpty());
+		
+	}
+	
+	@Test
+	public void testRegisterDevice_withOptionalProperties() throws ValidAPIParamException, IOException, URISyntaxException{
 		
 		IOTAPIClient iotApiClient = new IOTAPIClient(TEST_BASE_URL, TEST_USERNAME, TEST_PASSWORD);
 		
@@ -77,19 +124,20 @@ public class IOTAPIClientDeviceTest{
 		device.setManufacturer(TEST_DEVICE_MANUFACTURER);
 		device.setType(TEST_DEVICE_TYPE);
 		device.setDescription(TEST_DEVICE_DESCRIPTION);
+		device.setEnterpriseId(TEST_ENTERPRISE_ID);
 		device.setAttributes(deviceAttributes);
 		
 		stubFor(post(
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withOptionalPropertiesRequestBody.json")))
 				.withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
 				.willReturn(
 						aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json").
-						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceResponseBody.json")))
+						withBody(ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withOptionalPropertiesResponseBody.json")))
 				);
 		
 		DeviceDetails result = iotApiClient.registerDevice(device);
@@ -98,14 +146,21 @@ public class IOTAPIClientDeviceTest{
 				urlEqualTo(TEST_DEVICES_RESOURCE))
 				.withHeader("Accept", equalTo("application/json"))
 				.withRequestBody(equalToJson(
-						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDeviceRequestBody.json")))
+						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withOptionalPropertiesRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
 		assertEquals(result.getName(), TEST_DEVICE_NAME);
 		assertEquals(result.getManufacturer(), TEST_DEVICE_MANUFACTURER);
 		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
+		assertEquals(result.getEnterpriseId(), TEST_ENTERPRISE_ID);
+		assertEquals(result.getEnterpriseName(), TEST_ENTERPRISE_NAME);
+		assertEquals(result.getType(), TEST_DEVICE_TYPE);
+		assertEquals(result.getDescription(), TEST_DEVICE_DESCRIPTION);
+		
+		assertFalse(result.getAttributes().isEmpty());
+		assertEquals(result.getAttributes().size(), 2);
+		
 	}
-	
 	
 	public void testRegisterDevice_invalidCredentials() throws ValidAPIParamException, IOException, URISyntaxException{
 		
@@ -198,6 +253,8 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("NextGen Car Company", deviceDetails1.getManufacturer());
 		assertEquals("DreamCar", deviceDetails1.getName());
 		assertEquals("4WD", deviceDetails1.getType());
+		assertEquals(TEST_ENTERPRISE_ID, deviceDetails1.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, deviceDetails1.getEnterpriseName());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", deviceDetails1.getUri().toString());
 		
 		DeviceDetails deviceDetails2 = deviceDetailsList.get(1);
@@ -207,6 +264,8 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("Test Car Company", deviceDetails2.getManufacturer());
 		assertEquals("Test car", deviceDetails2.getName());
 		assertEquals("2WD", deviceDetails2.getType());
+		assertEquals(TEST_ENTERPRISE_ID, deviceDetails1.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, deviceDetails1.getEnterpriseName());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getUri().toString());
 
 	}
@@ -265,6 +324,8 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("153ffceb982745e8b1e8abacf9c217f3", result.getDeviceId());
 		assertEquals("NextGen Car Company", result.getManufacturer());
 		assertEquals("DreamCar", result.getName());
+		assertEquals(TEST_ENTERPRISE_ID, result.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, result.getEnterpriseName());
 		assertEquals("4WD", result.getType());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3", result.getUri().toString());
 	}

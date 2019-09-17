@@ -3,6 +3,7 @@
 	"manufacturer": "Test Oy",
 	"type": "PC",
 	"description": "The main server",
+	"enterpriseId": "E123",
 	"attributes":[{
 		"key":"Application Version",
 		"value": "0.2.3"},

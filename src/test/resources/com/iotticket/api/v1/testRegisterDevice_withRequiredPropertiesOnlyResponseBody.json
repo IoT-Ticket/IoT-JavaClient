@@ -3,7 +3,9 @@
 	"createdAt": "2014-12-03T10:31:05UTC", 
 	"deviceId": "153ffceb982745e8b1e8abacf9c217f3", 
 	"href": "https://www.test-url.com:9999/devices/153ffceb982745e8b1e8abacf9c217f3", 
-	"name": "Test device", 
-	"manufacturer": "Test Oy", 
+	"name": "Test device",
+	"manufacturer": "Test Oy",
+	"enterpriseId": "E123",
+	"enterpriseName": "Test Enterprise", 
 	"resourceId": "X123" 
 }

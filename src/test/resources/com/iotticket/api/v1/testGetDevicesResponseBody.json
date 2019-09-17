@@ -16,7 +16,7 @@
       ],
       "createdAt": "2019-05-23T09:42:55UTC",
       "deviceId": "153ffceb982745e8b1e8abacf9c217f3",
-      "enterpriseId": "TEST1234",
+      "enterpriseId": "E123",
       "enterpriseName": "Test Enterprise",
       "href": "https://my.iot-ticket.com/api/v1/devices/153ffceb982745e8b1e8abacf9c217f3",
       "manufacturer": "NextGen Car Company",
@@ -26,7 +26,7 @@
     {
       "createdAt": "2019-05-23T09:40:35UTC",
       "deviceId": "253ffceb982745e8b1e8abacf9c217f3",
-      "enterpriseId": "TESTS1234",
+      "enterpriseId": "E123",
       "enterpriseName": "Test Enterprise",
       "href": "https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3",
       "manufacturer": "Test Car Company",
