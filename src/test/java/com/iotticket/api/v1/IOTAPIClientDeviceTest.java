@@ -264,8 +264,8 @@ public class IOTAPIClientDeviceTest{
 		assertEquals("Test Car Company", deviceDetails2.getManufacturer());
 		assertEquals("Test car", deviceDetails2.getName());
 		assertEquals("2WD", deviceDetails2.getType());
-		assertEquals(TEST_ENTERPRISE_ID, deviceDetails1.getEnterpriseId());
-		assertEquals(TEST_ENTERPRISE_NAME, deviceDetails1.getEnterpriseName());
+		assertEquals(TEST_ENTERPRISE_ID, deviceDetails2.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, deviceDetails2.getEnterpriseName());
 		assertEquals("https://my.iot-ticket.com/api/v1/devices/253ffceb982745e8b1e8abacf9c217f3", deviceDetails2.getUri().toString());
 
 	}
