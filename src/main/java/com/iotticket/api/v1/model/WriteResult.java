@@ -8,7 +8,6 @@ public class WriteResult {
 
 
     /**
-     *
      * @return URI to read from the data node targeted in the write.
      */
     public URI getHref() {
@@ -20,7 +19,6 @@ public class WriteResult {
     }
 
     /**
-     *
      * @return The number of values written to the particular data node
      */
     public int getWrittenCount() {

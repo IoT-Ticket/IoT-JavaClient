@@ -43,7 +43,6 @@ public class DatanodeQueryCriteria {
      *
      * @param fromDate
      */
-
     public void setFromDate(Long fromDate) {
         this.fromDate = fromDate;
     }
@@ -61,7 +60,6 @@ public class DatanodeQueryCriteria {
      * @param toDate Unix Timestamp. Number of milliseconds since the Epoch.
      *               Defines the ending time from which the process values are fetched.
      */
-
     public void setToDate(Long toDate) {
         this.toDate = toDate;
     }
@@ -95,7 +93,6 @@ public class DatanodeQueryCriteria {
     /**
      * @param limit Maximum number of result to return for each datanode read.
      */
-
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
@@ -120,7 +117,6 @@ public class DatanodeQueryCriteria {
 
 
     /**
-     *
      * Example for a device that has only these three datanodes.
      * <p>
      * <pre>
@@ -153,7 +149,7 @@ public class DatanodeQueryCriteria {
 
     }
 
-    public static enum Order {
+    public enum Order {
         Ascending,
         Descending
     }
