@@ -101,17 +101,17 @@ public class DatanodeQueryCriteria {
     }
 
     public String getDataNodePaths() {
-        StringBuilder sb = new StringBuilder();
-
-        String[] strings = dataPaths.toArray(new String[dataPaths.size()]);
-        int len = strings.length;
-        for (int i = 0; i < len; i++) {
-            sb.append(strings[i]);
-            if (i != (len - 1)) {
-                sb.append(",");
-            }
+        // Create a StringBuilder with as big capacity as needed to hold the result.
+        final int GUESSED_STRING_LENGTH = 20;
+        StringBuilder sb = new StringBuilder(dataPaths.size() * GUESSED_STRING_LENGTH);
+        // Append all strings to the StringBuilder
+        for (String s : dataPaths) {
+            sb.append(s);
+            sb.append(',');
         }
-        return sb.toString();
+
+        // Remove the last comma
+        return sb.substring(0, sb.length() - 1);
     }
 
     public Set<String> getDataPaths() {

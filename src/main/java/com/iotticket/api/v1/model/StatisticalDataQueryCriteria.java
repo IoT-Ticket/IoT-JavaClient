@@ -183,17 +183,17 @@ public class StatisticalDataQueryCriteria {
 	}
 	
 	private String getUrlParameterString(Collection<String> collection) {
-        StringBuilder sb = new StringBuilder();
+		// Create a StringBuilder with as big capacity as needed to hold the result.
+		final int GUESSED_STRING_LENGTH = 20;
+		StringBuilder sb = new StringBuilder(collection.size() * GUESSED_STRING_LENGTH);
+		// Append all strings to the StringBuilder
+		for (String s : collection) {
+			sb.append(s);
+			sb.append(',');
+		}
 
-        String[] strings = collection.toArray(new String[collection.size()]);
-        int len = strings.length;
-        for (int i = 0; i < len; i++) {
-            sb.append(strings[i]);
-            if (i != (len - 1)) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
+		// Remove the last comma
+		return sb.substring(0, sb.length() - 1);
 	}
 
 	public static enum Grouping {
