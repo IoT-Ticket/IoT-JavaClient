@@ -7,7 +7,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
@@ -142,14 +142,14 @@ public class IOTAPIClientEnterpriseTest {
 		assertEquals("https://my.iot-ticket.com/api/v1/enterprises/5678", enterprise1.getUri().toString());
 		assertEquals("Enterprise 3", enterprise1.getName());
 		assertEquals("E5678", enterprise1.getResourceId());
-		assertEquals(true, enterprise1.getHasSubEnterprises());
+		assertTrue(enterprise1.getHasSubEnterprises());
 		
 		Enterprise enterprise2 = enterprises.get(1);
 		
 		assertEquals("https://my.iot-ticket.com/api/v1/enterprises/6789", enterprise2.getUri().toString());
 		assertEquals("Enterprise 4", enterprise2.getName());
 		assertEquals("E6789", enterprise2.getResourceId());
-		assertEquals(false, enterprise2.getHasSubEnterprises());
+		assertFalse(enterprise2.getHasSubEnterprises());
 		
 	}
 	

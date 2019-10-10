@@ -7,8 +7,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,9 +82,9 @@ public class IOTAPIClientStatisticalDataTest {
 		assertEquals(0, value1.getCount().longValue());
 		assertEquals(0, value1.getSum().doubleValue(), 0);
 		assertEquals(1483228800000L, value1.getTimestampMilliSeconds().longValue());
-		assertTrue(null == value1.getMinimum());
-		assertTrue(null == value1.getMaximum());
-		assertTrue(null == value1.getAverage());
+		assertNull(value1.getMinimum());
+		assertNull(value1.getMaximum());
+		assertNull(value1.getAverage());
 		
 		StatisticalDataReadValue value2 = statisticalDataValues.get(1);
 		
@@ -152,9 +151,9 @@ public class IOTAPIClientStatisticalDataTest {
 		assertEquals(3, value1.getCount().longValue());
 		assertEquals(10.0, value1.getSum().doubleValue(), 0);
 		assertEquals(1546293600000L, value1.getTimestampMilliSeconds().longValue());
-		assertTrue(2.0 == value1.getMinimum());
-		assertTrue(5.0 == value1.getMaximum());
-		assertTrue(3.5 == value1.getAverage());
+		assertEquals(2.0, value1.getMinimum(), 0.0);
+		assertEquals(5.0, value1.getMaximum(), 0.0);
+		assertEquals(3.5, value1.getAverage(), 0.0);
 		
 	}
 	

@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class DeviceTestIT extends IntegrationTestBase {
 
 
-    public static final String DEVICENAME = "DreamCar";
+    private static final String DEVICENAME = "DreamCar";
 
 
     @Test

@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
 public class DataNodeWriteReadIT extends IntegrationTestBase {
 
     private final static byte[] testByteValue = new byte[]{1, 2, 3, 4, 5, 6, 7, 9, 10};
-    public static String firstPath = "Engine/Auxillary";
-    public static String secondPath = "Engine/Main";
-    public static String numericDatanodeName = "AirVolume";
+    private static String firstPath = "Engine/Auxillary";
+    private static String secondPath = "Engine/Main";
+    private static String numericDatanodeName = "AirVolume";
     private static boolean testBooleanValue = false;
     private static String boolDatanodeName = "LightOn";
     private String byteDatanodeName = "MP3";
@@ -54,7 +54,7 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
     }
 
 
-    public void readBooleanValue() {
+    private void readBooleanValue() {
 
         DatanodeQueryCriteria criteria = new DatanodeQueryCriteria(deviceId, boolDatanodeName);
         criteria.setDeviceId(deviceId);
@@ -116,7 +116,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         Random r = new Random();
 
         Collection<DatanodeWriteValue> valuesToWrite = new ArrayList<DatanodeWriteValue>();
-        valuesToWrite.size();
         for (int i = 0; i < 30; i++) {
             cal.add(Calendar.MILLISECOND, 1);
 
@@ -157,13 +156,13 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         readFirstNumericValue();
         readSecondNumericValues();
 
-        /**Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
+        /* Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
          * but with different paths
          */
         DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, numericDatanodeName);
         ProcessValues processValues = apiClient.readProcessData(crit);
         Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
-        assertTrue(datanodeReads.size() == 2);
+        assertEquals(2, datanodeReads.size());
 
 
     }
@@ -183,7 +182,7 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
 
             Collection<DatanodeReadValue> values = datanodeRead.getDatanodeReadValues();
             assertEquals(DataType.DoubleType, datanodeRead.getDataType());
-            assertTrue(values.size() == 1);
+            assertEquals(1, values.size());
 
             for (DatanodeReadValue value : values) {
                 long ts = value.getTimestampMilliSeconds();

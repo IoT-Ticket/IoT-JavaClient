@@ -11,10 +11,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -94,15 +91,15 @@ public class IOTAPIClientDeviceTest{
 						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withRequiredPropertiesOnlyRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
 		
-		assertEquals(result.getName(), TEST_DEVICE_NAME);
-		assertEquals(result.getManufacturer(), TEST_DEVICE_MANUFACTURER);
-		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
+		assertEquals(TEST_DEVICE_NAME, result.getName());
+		assertEquals(TEST_DEVICE_MANUFACTURER, result.getManufacturer());
+		assertEquals(TEST_DEVICE_ID, result.getDeviceId());
 		
 		// If enterprise id is not defined in request body, user's root enterprise is returned here according to documentation.
-		assertEquals(result.getEnterpriseId(), TEST_ENTERPRISE_ID);
-		assertEquals(result.getEnterpriseName(), TEST_ENTERPRISE_NAME);
-		assertEquals(result.getType(), null);
-		assertEquals(result.getDescription(), null);
+		assertEquals(TEST_ENTERPRISE_ID, result.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, result.getEnterpriseName());
+		assertNull(result.getType());
+		assertNull(result.getDescription());
 		assertTrue(result.getAttributes().isEmpty());
 		
 	}
@@ -148,17 +145,17 @@ public class IOTAPIClientDeviceTest{
 				.withRequestBody(equalToJson(
 						ResourceFileUtils.resourceFileToString(RESOURCE_FILE_LOCATION + "testRegisterDevice_withOptionalPropertiesRequestBody.json")))
 				.withBasicAuth(new BasicCredentials(TEST_USERNAME, TEST_PASSWORD)));
-		
-		assertEquals(result.getName(), TEST_DEVICE_NAME);
-		assertEquals(result.getManufacturer(), TEST_DEVICE_MANUFACTURER);
-		assertEquals(result.getDeviceId(), TEST_DEVICE_ID);
-		assertEquals(result.getEnterpriseId(), TEST_ENTERPRISE_ID);
-		assertEquals(result.getEnterpriseName(), TEST_ENTERPRISE_NAME);
-		assertEquals(result.getType(), TEST_DEVICE_TYPE);
-		assertEquals(result.getDescription(), TEST_DEVICE_DESCRIPTION);
+
+		assertEquals(TEST_DEVICE_NAME, result.getName());
+		assertEquals(TEST_DEVICE_MANUFACTURER, result.getManufacturer());
+		assertEquals(TEST_DEVICE_ID, result.getDeviceId());
+		assertEquals(TEST_ENTERPRISE_ID, result.getEnterpriseId());
+		assertEquals(TEST_ENTERPRISE_NAME, result.getEnterpriseName());
+		assertEquals(TEST_DEVICE_TYPE, result.getType());
+		assertEquals(TEST_DEVICE_DESCRIPTION, result.getDescription());
 		
 		assertFalse(result.getAttributes().isEmpty());
-		assertEquals(result.getAttributes().size(), 2);
+		assertEquals(2, result.getAttributes().size());
 		
 	}
 	
