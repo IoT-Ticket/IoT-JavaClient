@@ -37,15 +37,15 @@ public class ValidationIT {
 
         writeValue.setValue(64.3f);
         failureNotExpected(writeValue);
-        assertEquals(writeValue.getValue(), "64.3");
+        assertEquals("64.3", writeValue.getValue());
 
 
         writeValue.setValue(true);
-        assertEquals(writeValue.getValue(), "true");
+        assertEquals("true", writeValue.getValue());
 
 
         writeValue.setValue(Integer.MIN_VALUE);
-        assertEquals(writeValue.getValue(), Integer.toString(Integer.MIN_VALUE));
+        assertEquals(Integer.toString(Integer.MIN_VALUE), writeValue.getValue());
 
 
         writeValue.setPath("1/2/3/4/5/6/7/8/9/10/11");
@@ -85,7 +85,7 @@ public class ValidationIT {
     }
 
     private static String repeatNTimes(String str, int numberOfTimes) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(numberOfTimes * str.length());
         for (int i = 0; i < numberOfTimes; i++) {
             sb.append(str);
         }

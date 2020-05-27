@@ -21,11 +21,8 @@ public class ResourceFileUtils {
 		InputStream resourceFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 		
 		if (resourceFileStream == null) {
-			StringBuilder message = new StringBuilder();
-			message.append("Resource file ");
-			message.append(path);
-			message.append(" not found.");
-			throw new IllegalStateException(message.toString());
+			String message = String.format("Resource file %s not found.", path);
+			throw new IllegalStateException(message);
 		}
 		
 		Scanner scanner = new Scanner(resourceFileStream);
