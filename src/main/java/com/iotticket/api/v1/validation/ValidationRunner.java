@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class ValidationRunner {
 
-
     final Map<String, Pattern> PATTERN_CACHE = new HashMap<String, Pattern>(1);
 
     public void runValidation(Validatable validatable) throws ValidAPIParamException {
@@ -28,7 +27,6 @@ public class ValidationRunner {
                 if (type.isAssignableFrom(String.class)) {
                     String value = (String) f.get(validatable);
                     checkStringField(value, maxlength, regexPattern, isNullable, f.getName());
-
                 } else if (Collection.class.isAssignableFrom(type)) {
                     Collection collection = (Collection) f.get(validatable);
                     checkCollection(collection, maxlength, isNullable, f.getName());
@@ -37,7 +35,6 @@ public class ValidationRunner {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -58,7 +55,6 @@ public class ValidationRunner {
         if (isNullable && collection == null) return;
 
         if (!isNullable) {
-
             if (collection == null || collection.isEmpty()) {
                 String msg = MessageFormat.format("{0} is needed", fieldName);
                 throw new ValidAPIParamException(msg);
@@ -66,7 +62,6 @@ public class ValidationRunner {
         }
 
         if (collection.size() > maxlength) {
-
             String msg = MessageFormat.format("{0} size exceeds {1}  expected", fieldName, maxlength);
             throw new ValidAPIParamException(msg);
         }
@@ -77,7 +72,6 @@ public class ValidationRunner {
                 Validatable vo = (Validatable) o;
                 runValidation(vo);
             }
-
         }
 
     }
@@ -101,7 +95,6 @@ public class ValidationRunner {
                 throw new ValidAPIParamException(msg);
             }
         }
-
 
     }
 

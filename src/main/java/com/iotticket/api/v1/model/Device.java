@@ -25,7 +25,7 @@ public class Device implements Validatable {
     private String description;
 
     private String enterpriseId;
-    
+
     @APIRequirement(maxLength = 50)
     private Collection<DeviceAttribute> attributes = new HashSet<DeviceAttribute>();
 
@@ -54,14 +54,14 @@ public class Device implements Validatable {
     }
 
     public String getEnterpriseId() {
-		return enterpriseId;
-	}
+        return enterpriseId;
+    }
 
-	public void setEnterpriseId(String enterpriseId) {
-		this.enterpriseId = enterpriseId;
-	}
+    public void setEnterpriseId(String enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
 
-	public String getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -150,21 +150,21 @@ public class Device implements Validatable {
         public void setCreatedAt(Date createdAt) {
             this.createdAt = createdAt;
         }
-        
+
         public String getEnterpriseName() {
-			return enterpriseName;
-		}
+            return enterpriseName;
+        }
 
-		public void setEnterpriseName(String enterpriseName) {
-			this.enterpriseName = enterpriseName;
-		}
+        public void setEnterpriseName(String enterpriseName) {
+            this.enterpriseName = enterpriseName;
+        }
 
-		@Override
+        @Override
         public String toString() {
             return "DeviceDetails{" +
                     "uri='" + uri + '\'' +
                     ", deviceId='" + deviceId + '\'' +
-                    ", createdAt='" + createdAt + '\'' + 
+                    ", createdAt='" + createdAt + '\'' +
                     ", enterpriseName='" + enterpriseName + '\'' +
                     super.toString() +
                     '}';

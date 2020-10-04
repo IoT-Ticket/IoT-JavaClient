@@ -50,7 +50,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         assertNotNull(writeResult.getWriteResults().iterator().next().getHref());
 
         readBooleanValue();
-
     }
 
 
@@ -65,18 +64,15 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         assertEquals(DataType.BooleanType, processData.getDatanodeReads().iterator().next().getDataType());
         assertEquals(testBooleanValue, processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getConvertedValue());
         assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getTimestampMilliSeconds() > 0L);
-
     }
 
 
     @Test
     public void writeBinaryValue() throws ValidAPIParamException {
 
-
         DatanodeWriteValue writeValue = new DatanodeWriteValue();
         writeValue.setName(byteDatanodeName);
         writeValue.setValue(testByteValue);
-
 
         WriteDataResponse writeResult = apiClient.writeData(deviceId, writeValue);
         assertNotNull(writeResult);
@@ -86,7 +82,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         assertNotNull(writeResult.getWriteResults().iterator().next().getHref());
 
         readBinaryValue();
-
     }
 
 
@@ -100,8 +95,9 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         assertTrue(processData.getDatanodeReads().iterator().next().getDatanodeReadValues().size() > 0);
 
         assertEquals(DataType.BinaryType, processData.getDatanodeReads().iterator().next().getDataType());
-        assertArrayEquals(testByteValue, (byte[]) processData.getDatanodeReads().iterator().next().getDatanodeReadValues().iterator().next().getConvertedValue());
-
+        assertArrayEquals(testByteValue,
+                (byte[]) processData.getDatanodeReads().iterator().next()
+                .getDatanodeReadValues().iterator().next().getConvertedValue());
     }
 
 
@@ -109,7 +105,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
     public void writeNumericValue() throws IoTServerCommunicationException, ValidAPIParamException {
 
         DeviceDetails device = apiClient.getDevice(deviceId);
-
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.add(Calendar.SECOND, -1);
@@ -129,7 +124,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
 
             valuesToWrite.add(dnwrite);
 
-
             dnwrite = new DatanodeWriteValue();
             dnwrite.setName(numericDatanodeName);
             dnwrite.setPath(secondPath);
@@ -138,7 +132,6 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
             dnwrite.setTimestampMilliseconds(cal.getTimeInMillis());
 
             valuesToWrite.add(dnwrite);
-
         }
 
         WriteDataResponse writeResult = apiClient.writeData(device.getDeviceId(), valuesToWrite);
@@ -148,34 +141,64 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
         assertTrue(writeResult.getWriteResults().iterator().next().getWrittenCount() > 0);
         assertNotNull(writeResult.getWriteResults().iterator().next().getHref());
 
-
         readNumericValue();
-
     }
 
     private void readNumericValue() {
         readFirstNumericValue();
         readSecondNumericValues();
 
-        /**Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
+        /* Two datanodes are expected, since there are two datanodes with the name <numericDatanodeName>
          * but with different paths
          */
         DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, numericDatanodeName);
         ProcessValues processValues = apiClient.readProcessData(crit);
         Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
         assertTrue(datanodeReads.size() == 2);
+    }
 
+    private void readFirstNumericValue() {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.add(Calendar.SECOND, -5);
 
+        String fullPath = DataPathUtil.getFullPath(numericDatanodeName, firstPath);
+        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, fullPath);
+        crit.setFromDate(cal.getTimeInMillis());
+        crit.setLimit(100);
+        crit.setSortOrder(Order.Ascending);
+
+        // TODO: Without the following code the test fails, as the stored nodes are not yet available.
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        ProcessValues processValues = apiClient.readProcessData(crit);
+        Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
+        for (DatanodeRead datanodeRead : datanodeReads) {
+
+            Collection<DatanodeReadValue> values = datanodeRead.getDatanodeReadValues();
+            assertEquals(DataType.LongType, datanodeRead.getDataType());
+            assertTrue(values.size() >= 30);
+
+            for (DatanodeReadValue value : values) {
+                long ts = value.getTimestampMilliSeconds();
+                long val = (Long) value.getConvertedValue();
+
+                assertTrue(val < 10);
+                assertTrue(ts > 0);
+            }
+        }
     }
 
     private void readSecondNumericValues() {
-
 
         String fullPath = DataPathUtil.getFullPath(numericDatanodeName, secondPath);
 
         DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, fullPath);
         crit.setSortOrder(Order.Descending);
-
 
         ProcessValues processValues = apiClient.readProcessData(crit);
         Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
@@ -195,43 +218,5 @@ public class DataNodeWriteReadIT extends IntegrationTestBase {
             }
         }
     }
-
-    private void readFirstNumericValue() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(Calendar.SECOND, -5);
-
-        String fullPath = DataPathUtil.getFullPath(numericDatanodeName, firstPath);
-        DatanodeQueryCriteria crit = new DatanodeQueryCriteria(deviceId, fullPath);
-        crit.setFromDate(cal.getTimeInMillis());
-        crit.setLimit(100);
-        crit.setSortOrder(Order.Ascending);
-
-        // TODO: Without the following code the test fails, as the stored nodes are not yet available.
-        try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        ProcessValues processValues = apiClient.readProcessData(crit);
-        Collection<DatanodeRead> datanodeReads = processValues.getDatanodeReads();
-        for (DatanodeRead datanodeRead : datanodeReads) {
-
-            Collection<DatanodeReadValue> values = datanodeRead.getDatanodeReadValues();
-            assertEquals(DataType.LongType, datanodeRead.getDataType());
-            assertTrue(values.size() >= 30);
-
-            for (DatanodeReadValue value : values) {
-                long ts = value.getTimestampMilliSeconds();
-                long val = (Long) value.getConvertedValue();
-
-                assertTrue(val < 10);
-                assertTrue(ts > 0);
-
-            }
-        }
-    }
-
 
 }

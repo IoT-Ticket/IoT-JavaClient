@@ -4,7 +4,6 @@ import java.util.List;
 
 /**
  * Response from server after a write.
- *
  */
 public class WriteDataResponse {
     private List<WriteResult> writeResults;
@@ -19,7 +18,6 @@ public class WriteDataResponse {
     }
 
     /**
-     *
      * @return Total number of data points written
      */
     public int getTotalWritten() {

@@ -22,14 +22,11 @@ public class Datanode extends DatanodeBase {
         this.uri = uri;
     }
 
-
     public static class DatanodeWriteValue extends DatanodeBase {
-
 
         @SerializedName("v")
         @APIRequirement(nullable = false)
         private String value;
-
 
         @SerializedName("ts")
         private Long timestampMilliseconds;
@@ -44,37 +41,26 @@ public class Datanode extends DatanodeBase {
                 this.value = null;
                 return;
             }
+
             if (value instanceof Double) {
                 setDoubleValue((Double) value);
-
             } else if (value instanceof Integer) {
                 setIntegerValue((Integer) value);
             } else if (value instanceof Long) {
                 setLongValue((Long) value);
-
             } else if (value instanceof byte[]) {
                 setByteValue((byte[]) value);
             } else if (value instanceof Boolean) {
                 setBooleanValue((Boolean) value);
-
             } else if (value instanceof Float) {
                 setFloat((Float) value);
             } else setInternal(String.valueOf(value));
 
         }
 
-        private void setFloat(Float f) {
-            setDataType(DataType.DoubleType);
-            setInternal(Float.toString(f));
-        }
-
         public void setDoubleValue(double d) {
             setDataType(DataType.DoubleType);
             setInternal(Double.toString(d));
-        }
-
-        private void setInternal(String value) {
-            this.value = value;
         }
 
         private void setIntegerValue(int i) {
@@ -87,17 +73,25 @@ public class Datanode extends DatanodeBase {
             setInternal(Long.toString(l));
         }
 
-        public void setBooleanValue(boolean bool) {
-            setDataType(DataType.BooleanType);
-            setInternal(Boolean.toString(bool));
-        }
-
         public void setByteValue(byte[] bytes) {
             String encode = Base64.encodeBase64String(bytes);
             setDataType(DataType.BinaryType);
             setInternal(encode);
         }
 
+        public void setBooleanValue(boolean bool) {
+            setDataType(DataType.BooleanType);
+            setInternal(Boolean.toString(bool));
+        }
+
+        private void setFloat(Float f) {
+            setDataType(DataType.DoubleType);
+            setInternal(Float.toString(f));
+        }
+
+        private void setInternal(String value) {
+            this.value = value;
+        }
 
         public Long getTimestampMilliseconds() {
             return timestampMilliseconds;
@@ -117,18 +111,15 @@ public class Datanode extends DatanodeBase {
         @SerializedName("values")
         private Collection<DatanodeReadValue> datanodeReadValues = new LinkedList<DatanodeReadValue>();
 
-
         public Collection<DatanodeReadValue> getDatanodeReadValues() {
             return datanodeReadValues;
         }
-
 
     }
 
     public static class DatanodeReadValue {
 
         public static final long UNSET = Long.MIN_VALUE;
-
 
         @SerializedName("v")
         private String value;

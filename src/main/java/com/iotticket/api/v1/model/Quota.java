@@ -22,7 +22,6 @@ public class Quota {
 
 
     /**
-     *
      * @return The maximum number of devices the client can create.
      */
     public Integer getMaxNumberOfDevices() {
@@ -34,7 +33,6 @@ public class Quota {
     }
 
     /**
-     *
      * @return The maximum datanodes per device allowed for a client.
      */
 
@@ -48,7 +46,6 @@ public class Quota {
 
 
     /**
-     *
      * @return The total size in bytes that the client has written to the server.
      */
     public Long getUsedStorageSize() {
@@ -60,7 +57,6 @@ public class Quota {
     }
 
     /**
-     *
      * @return The maximum size in bytes that the client has a right to write to the server.
      */
     public Long getMaxStorageSize() {
