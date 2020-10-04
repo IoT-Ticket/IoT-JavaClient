@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface APIRequirement {
 
-    public static final int UNRESTRICTED = -1;
+    int UNRESTRICTED = -1;
 
     int maxLength() default UNRESTRICTED;
 

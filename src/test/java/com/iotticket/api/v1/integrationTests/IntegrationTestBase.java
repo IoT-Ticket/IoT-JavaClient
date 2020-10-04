@@ -5,11 +5,10 @@ import com.iotticket.api.v1.IOTAPIClient;
 
 public abstract class IntegrationTestBase {
 
-
-    final static String SERVER_URL = "https://my.iot-ticket.com/api/v1";
-    final static String deviceId = "<device-id>";
-    final static String userName = "<your-username>";
-    final static String password = "<your-password";
-    final static IOTAPIClient apiClient = new IOTAPIClient(SERVER_URL, userName,password);
+    static final String SERVER_URL = "https://my.iot-ticket.com/api/v1";
+    static final String deviceId = "<device-id>";
+    static final String userName = "<your-username>";
+    static final String password = "<your-password";
+    static final IOTAPIClient apiClient = new IOTAPIClient(SERVER_URL, userName, password);
 
 }

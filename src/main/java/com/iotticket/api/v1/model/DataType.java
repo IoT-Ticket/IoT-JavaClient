@@ -6,7 +6,6 @@ import javax.xml.bind.DatatypeConverter;
 
 public enum DataType {
 
-
     @SerializedName("double")
     DoubleType,
 

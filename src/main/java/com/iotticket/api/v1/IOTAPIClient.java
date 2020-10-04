@@ -31,16 +31,16 @@ import java.util.logging.Logger;
 public class IOTAPIClient {
 
 
-    private final static String DevicesResource = "devices/";
-    private final static String SpecificDeviceResourceFormat = DevicesResource + "{deviceId}/";
-    private final static String DatanodesResourceFormat = SpecificDeviceResourceFormat + "datanodes/";
-    private final static String WriteDataResourceFormat = "process/write/{deviceId}/";
-    private final static String ReadDataResourceFormat = "process/read/{deviceId}/";
-    private final static String ReadStatisticalDataResourceFormat = "stat/read/{deviceId}/";
+    private static final String DevicesResource = "devices/";
+    private static final String SpecificDeviceResourceFormat = DevicesResource + "{deviceId}/";
+    private static final String DatanodesResourceFormat = SpecificDeviceResourceFormat + "datanodes/";
+    private static final String WriteDataResourceFormat = "process/write/{deviceId}/";
+    private static final String ReadDataResourceFormat = "process/read/{deviceId}/";
+    private static final String ReadStatisticalDataResourceFormat = "stat/read/{deviceId}/";
     private static final String RootEnterprisesResourceFormat = "enterprises/";
     private static final String SubEnterprisesResourceFormat = "enterprises/{enterpriseId}/";
-    private final static String QuotaAllResource = "quota/all/";
-    private final static String QuotaDeviceResourceFormat = "quota/{deviceId}/";
+    private static final String QuotaAllResource = "quota/all/";
+    private static final String QuotaDeviceResourceFormat = "quota/{deviceId}/";
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create();
     private static final Logger LOG = Logger.getLogger(IOTAPIClient.class.getName());
     private static final MediaType JSON = MediaType.APPLICATION_JSON_TYPE;
@@ -52,10 +52,9 @@ public class IOTAPIClient {
         if (serverUrl == null || userName == null || password == null) {
             throw new IllegalArgumentException("Ensure the serverUrl, username and password are not null");
         }
+
         Client client = ClientBuilder.newClient().register(HttpAuthenticationFeature.basic(userName, password));
         baseTarget = client.target(serverUrl);
-
-
     }
 
 
@@ -65,7 +64,6 @@ public class IOTAPIClient {
      * {@link DeviceDetails#getDeviceId}.and the URI for the newly registered device.
      * @throws ValidAPIParamException if the device does not meet the specified requirements
      */
-
     public DeviceDetails registerDevice(Device device) throws ValidAPIParamException {
 
         validator.runValidation(device);
@@ -83,12 +81,11 @@ public class IOTAPIClient {
         String jsonResponse = res.readEntity(String.class);
         LOG.finest(jsonResponse);
         if (statusInfo.getFamily() != Response.Status.OK.getFamily()) {
-
             ErrorInfo errorResponse = getErrorInfo(statusInfo, jsonResponse);
             LOG.info(errorResponse.toString());
             throw new IoTServerCommunicationException("Request with server was unsuccesful, check the errorInfo object for further details", errorResponse);
-
         }
+
         return gson.fromJson(jsonResponse, clz);
     }
 
@@ -104,7 +101,6 @@ public class IOTAPIClient {
         }
 
         return info;
-
     }
 
     public WriteDataResponse writeData(String deviceId, DatanodeWriteValue... data) throws ValidAPIParamException {
@@ -113,13 +109,11 @@ public class IOTAPIClient {
 
 
     /**
-     *
-     * @param deviceId The target Device identifier
+     * @param deviceId    The target Device identifier
      * @param writeValues Collection of DatanodeWriteValue to write to the server
      * @return <tt>WriteDataResponse</tt>
      * @throws ValidAPIParamException If the any of the DatanodeWriteValue doesn't meet specified requirement.
      */
-
     public WriteDataResponse writeData(String deviceId, Collection<DatanodeWriteValue> writeValues) throws ValidAPIParamException {
 
         for (DatanodeWriteValue writeValue : writeValues) {
@@ -142,22 +136,17 @@ public class IOTAPIClient {
      * @param limit  The maximum amount of result to be returned
      * @return a Collection of client's devices with paging support. Obtain items list using {@link PagedResult#getResults}
      */
-
     public PagedResult<DeviceDetails> getDeviceList(int offset, int limit) {
-
 
         WebTarget target = baseTarget.path(DevicesResource).queryParam("limit", limit).queryParam("offset", offset);
         Response res = target.request().accept(JSON).get();
         return getResponse(res, Device.DeviceList.class);
-
-
     }
 
     /**
-     *
      * @param deviceId The device to query.
-     * @param offset The amount to skip from the beginning.
-     * @param limit  The maximum amount of result to be returned
+     * @param offset   The amount to skip from the beginning.
+     * @param limit    The maximum amount of result to be returned
      * @return Get a list of provided device datanodes with Paging support.Obtain items list using {@link PagedResult#getResults}
      */
     public PagedResult<Datanode> getDeviceDataNodeList(String deviceId, int offset, int limit) {
@@ -165,14 +154,12 @@ public class IOTAPIClient {
         WebTarget target = baseTarget.path(DatanodesResourceFormat).resolveTemplate("deviceId", deviceId).queryParam("limit", limit).queryParam("offset", offset);
         Response res = target.request().accept(JSON).get();
         return getResponse(res, DataNodeList.class);
-
     }
 
     /**
      * @param deviceId The deviceId for the device to be fetched from the server.
      * @return <tt>DeviceDetails</tt> that describes the device's name, attributes, URI etc.
      */
-
     public Device.DeviceDetails getDevice(String deviceId) {
         WebTarget target = baseTarget.path(SpecificDeviceResourceFormat).resolveTemplate("deviceId", deviceId);
         Response res = target.request().accept(JSON).get();
@@ -186,7 +173,6 @@ public class IOTAPIClient {
      * @See DatanodeQueryCriteria
      */
     public ProcessValues readProcessData(DatanodeQueryCriteria criteria) {
-
 
         WebTarget target = baseTarget.path(ReadDataResourceFormat);
         target = target.resolveTemplate("deviceId", criteria.getDeviceId());
@@ -219,73 +205,73 @@ public class IOTAPIClient {
                 v.setDataType(dataType);
             }
         }
-        return pv;
 
+        return pv;
     }
-    
+
     /**
      * Note that minimum, average and maximum might be <b>null</b> in <tt>StatisticalDataReadValue</tt> if time interval
      * contained no suitable values for calculating statistics.
+     *
      * @param criteria The <tt>StatisticalDataQueryCriteria</tt> object used to query for the statistical values
      * @return Statistical data returned as <tt>StatisticalDataValues</tt> object
      * @See StatisticalDataQueryCriteria
      */
     public StatisticalDataValues readStatisticalData(StatisticalDataQueryCriteria criteria) {
         WebTarget target = baseTarget.path(ReadStatisticalDataResourceFormat);
-        
+
         target = target.resolveTemplate("deviceId", criteria.getDeviceId());
         target = target.queryParam("datanodes", criteria.getDataPathsAsString());
         target = target.queryParam("grouping", criteria.getGrouping().name());
         target = target.queryParam("fromdate", criteria.getFromDate());
         target = target.queryParam("todate", criteria.getToDate());
-        
+
         if (criteria.getSortOrder() != null) {
             target = target.queryParam("order", criteria.getSortOrder().name());
         }
-        
+
         if (!criteria.getVtags().isEmpty()) {
             target = target.queryParam("vtags", criteria.getVtagsAsString());
         }
-        
+
         Response res = target.request().accept(JSON).get();
-        
+
         StatisticalDataValues values = getResponse(res, StatisticalDataValues.class);
         return values;
     }
-    
-    
+
+
     /**
-    *
-    * @param offset The amount to skip from the beginning
-    * @param limit The maximum amount of result to be returned
-    * @return Get a list of root enterprises the client has access to
-    *  Obtain items list using {@link PagedResult#getResults}
-    */
+     * @param offset The amount to skip from the beginning
+     * @param limit  The maximum amount of result to be returned
+     * @return Get a list of root enterprises the client has access to
+     * Obtain items list using {@link PagedResult#getResults}
+     */
     public PagedResult<Enterprise> getRootEnterprises(int limit, int offset) {
-    	WebTarget target = baseTarget.path(RootEnterprisesResourceFormat).queryParam("limit", limit).queryParam("offset", offset);
-    	
-    	Response res = target.request().accept(JSON).get();
-    	return getResponse(res, EnterpriseList.class);
+        WebTarget target = baseTarget.path(RootEnterprisesResourceFormat).queryParam("limit", limit).queryParam("offset", offset);
+
+        Response res = target.request().accept(JSON).get();
+        return getResponse(res, EnterpriseList.class);
     }
-    
+
     /**
-    * Get enterprises under enterprise with the provided resource id
-    * @param enterpriseId Resource id of the enterprise
-    * @param offset The amount to skip from the beginning
-    * @param limit The maximum amount of result to be returned
-    * @return Get a list of sub enterprises under the enterprise with provided resource id. 
-    *  Obtain items list using {@link PagedResult#getResults}
-    */
-    public PagedResult<Enterprise> getSubEnterprises(String enterpriseId, int limit, int offset) {
-    	WebTarget target = baseTarget.path(SubEnterprisesResourceFormat).resolveTemplate("enterpriseId", enterpriseId).queryParam("limit", limit).queryParam("offset", offset);
-    	
-    	Response res = target.request().accept(JSON).get();
-    	return getResponse(res, EnterpriseList.class);
-    }
-    
-    
-    /**
+     * Get enterprises under enterprise with the provided resource id
      *
+     * @param enterpriseId Resource id of the enterprise
+     * @param offset       The amount to skip from the beginning
+     * @param limit        The maximum amount of result to be returned
+     * @return Get a list of sub enterprises under the enterprise with provided resource id.
+     * Obtain items list using {@link PagedResult#getResults}
+     */
+    public PagedResult<Enterprise> getSubEnterprises(String enterpriseId, int limit, int offset) {
+        WebTarget target = baseTarget.path(SubEnterprisesResourceFormat).resolveTemplate("enterpriseId", enterpriseId).queryParam("limit", limit).queryParam("offset", offset);
+
+        Response res = target.request().accept(JSON).get();
+        return getResponse(res, EnterpriseList.class);
+    }
+
+
+    /**
      * @return Fetches the user's <tt>Quota</tt> information from the server
      */
     public Quota getQuota() {
@@ -295,14 +281,11 @@ public class IOTAPIClient {
 
 
     /**
-     *
      * @param deviceId
      * @return Get the <tt>DeviceQuota</tt> from the server for the device with the specified deviceId
      */
-
     public DeviceQuota getDeviceQuota(String deviceId) {
         Response res = baseTarget.path(QuotaDeviceResourceFormat).resolveTemplate("deviceId", deviceId).request().accept(JSON).get();
         return getResponse(res, DeviceQuota.class);
-
     }
 }
