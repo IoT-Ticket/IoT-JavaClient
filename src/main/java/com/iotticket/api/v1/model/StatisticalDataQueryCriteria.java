@@ -63,6 +63,7 @@ public class StatisticalDataQueryCriteria {
         if (fromDate == null) {
             throw new IllegalArgumentException("fromDate must be set");
         }
+        this.fromDate = fromDate.getTime();
     }
 
     public Long getToDate() {
@@ -82,6 +83,7 @@ public class StatisticalDataQueryCriteria {
         if (toDate == null) {
             throw new IllegalArgumentException("toDate must be set");
         }
+        this.toDate = toDate.getTime();
     }
 
     public String getDeviceId() {
