@@ -63,6 +63,7 @@ public class StatisticalDataQueryCriteria {
         if (fromDate == null) {
             throw new IllegalArgumentException("fromDate must be set");
         }
+        this.fromDate = fromDate.getTime();
     }
 
     public Long getToDate() {
@@ -82,6 +83,7 @@ public class StatisticalDataQueryCriteria {
         if (toDate == null) {
             throw new IllegalArgumentException("toDate must be set");
         }
+        this.toDate = toDate.getTime();
     }
 
     public String getDeviceId() {
@@ -118,6 +120,9 @@ public class StatisticalDataQueryCriteria {
             sb.append(s);
             sb.append(',');
         }
+
+        // Remove the last comma and return
+        return sb.substring(0, sb.length() - 1);
     }
 
     public Set<String> getDataPaths() {
