@@ -118,6 +118,9 @@ public class StatisticalDataQueryCriteria {
             sb.append(s);
             sb.append(',');
         }
+
+        // Remove the last comma and return
+        return sb.substring(0, sb.length() - 1);
     }
 
     public Set<String> getDataPaths() {
