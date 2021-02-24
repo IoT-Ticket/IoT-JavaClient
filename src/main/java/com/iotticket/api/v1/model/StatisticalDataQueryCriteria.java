@@ -118,6 +118,7 @@ public class StatisticalDataQueryCriteria {
             sb.append(s);
             sb.append(',');
         }
+        return sb.toString();
     }
 
     public Set<String> getDataPaths() {
