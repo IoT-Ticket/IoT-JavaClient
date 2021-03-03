@@ -133,3 +133,43 @@ https://www.iot-ticket.com/images/Files/IoT-Ticket.com_IoT_API.pdf
 ## Download JAR
 
 https://github.com/IoT-Ticket/IoT-JavaClient/releases/latest
+
+## Version 
+
+You need to change your java version in pom.xml
++ Java 8 : 1.8
++ Java 9 : 9
++ Java 10 : 10
++ ...
++ Java 15 : 15
+
+
+```java
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.1</version>
+  <configuration>
+    <source>{your.java.verion}</source>
+    <target>{your.java.verion}</target>
+    <showDeprecation>true</showDeprecation>
+    <showWarnings>true</showWarnings>
+  </configuration>
+</plugin>
+```
+
++ For example with Java 9:
+
+```java
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.1</version>
+  <configuration>
+    <source>9</source>
+    <target>9</target>
+    <showDeprecation>true</showDeprecation>
+    <showWarnings>true</showWarnings>
+  </configuration>
+</plugin>
+```

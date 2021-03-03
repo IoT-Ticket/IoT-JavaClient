@@ -2,7 +2,7 @@ package com.iotticket.api.v1.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 public enum DataType {
 
@@ -31,7 +31,7 @@ public enum DataType {
             case StringType:
                 return value;
             case BinaryType:
-                return DatatypeConverter.parseBase64Binary(value);
+                return Base64.getDecoder().decode(value);
             case BooleanType:
                 return Boolean.parseBoolean(value);
             default:
